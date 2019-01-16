@@ -13,6 +13,7 @@
 #define FILENAME "test.txt"
 
 uint32_t *buf;
+size_t len;
 struct fb_var_screeninfo vinfo;
 struct fb_fix_screeninfo finfo;
 int xres;
@@ -27,8 +28,9 @@ void init() {
     assert(ioctl(fb, FBIOGET_FSCREENINFO, &finfo) == 0);
     xres = finfo.line_length / 4;
     yres = vinfo.yres_virtual;
+    len = finfo.line_length * yres;
     // Getting the framebuffer memory
-    buf = mmap(NULL, finfo.line_length * yres, PROT_READ | PROT_WRITE, MAP_SHARED, fb, 0);
+    buf = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, fb, 0);
     assert(buf != MAP_FAILED);
 }
 
@@ -91,6 +93,8 @@ int main() {
     scanf("%c",&temp);
     
     clear();
+
+    munmap(&buf,len);
 
     // Turn the cursor back on
     system("setterm -cursor on");
