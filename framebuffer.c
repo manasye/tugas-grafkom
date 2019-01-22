@@ -1,102 +1,43 @@
+#include "framebuffer.h"
 #include <assert.h>
 #include <fcntl.h>
 #include <linux/fb.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
-#define FILENAME "test.txt"
 
-uint32_t *buf;
-size_t len;
-struct fb_var_screeninfo vinfo;
-struct fb_fix_screeninfo finfo;
-int xres;
-int yres;
-
-void init() {
+void init(FBUFFER *fb) {
     // Getting the framebuffer
-    int fb = open("/dev/fb0", O_RDWR);
-    assert(fb > 0);
+    int temp = open("/dev/fb0", O_RDWR);
+    struct fb_var_screeninfo vinfo;
+    struct fb_fix_screeninfo finfo;
+    assert(temp > 0);
     // Getting framebuffer information - width, height
-    assert(ioctl(fb, FBIOGET_VSCREENINFO, &vinfo) == 0);
-    assert(ioctl(fb, FBIOGET_FSCREENINFO, &finfo) == 0);
-    xres = finfo.line_length / 4;
-    yres = vinfo.yres_virtual;
-    len = finfo.line_length * yres;
+    assert(ioctl(temp, FBIOGET_VSCREENINFO, &vinfo) == 0);
+    assert(ioctl(temp, FBIOGET_FSCREENINFO, &finfo) == 0);
+    (*fb).xres = finfo.line_length / 4;
+    (*fb).yres = vinfo.yres_virtual;
     // Getting the framebuffer memory
-    buf = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_SHARED, fb, 0);
-    assert(buf != MAP_FAILED);
+    (*fb).buf = mmap(NULL, finfo.line_length * (*fb).yres, PROT_READ | PROT_WRITE, MAP_SHARED, temp, 0);
+    assert((*fb).buf != MAP_FAILED);
 }
 
-void colorPixel(int x, int y, uint32_t rgb) {
-    buf[y * xres + x] = rgb;
+void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb) {
+    (*fb).buf[y * (*fb).xres + x] = rgb;
 }
 
-int charToInt(char n) {
-    return ((int) (n - '0'));
-}
-
-void clear() {
+void clear(FBUFFER *fb) {
     int i, j;
-    for (j = 0;j < yres; j++) {
-        for (i = 0;i < xres; i++) {
-            colorPixel(i,j,BLACK);
+    for (j = 0;j < (*fb).yres; j++) {
+        for (i = 0;i < (*fb).xres; i++) {
+            colorPixel(fb,i,j,BLACK);
         }
     }
 }
 
-int main() {
-    char temp;
-    char intBuffer[5];
-    int curX, curY;
-    // Turn off the cursor
-    system("setterm -cursor off");
-
-    init();
-
-    printf("Width : %d\nHeight : %d\n",xres,yres);
-    scanf("%c",&temp);
-
-    clear();
-
-    // Open file
-    FILE *inputFile = fopen(FILENAME,"r");
-    temp = getc(inputFile);
-    while(temp != EOF) {
-        while((temp != '\n') && (temp != EOF)) {
-            curX = 0;
-            curY = 0;
-            while(temp != ',') {
-                curX = (curX * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
-            temp = getc(inputFile);
-            while((temp != '\n') && (temp != EOF)) {
-                curY = (curY * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
-            colorPixel(curX,curY,WHITE);
-            if (temp != EOF) {
-                temp = getc(inputFile);
-            }
-        }
-    }
-    fclose(inputFile);
-
-    // Pause
-    scanf("%c",&temp);
-    
-    clear();
-
-    munmap(&buf,len);
-
-    // Turn the cursor back on
-    system("setterm -cursor on");
-    return 0;
+void destroy(FBUFFER *fb) {
+    munmap(&((*fb).buf),(*fb).xres * 4 * (*fb).yres);
 }
