@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 
-typedef struct {
+typedef struct
+{
     uint32_t *buf;
     int xres;
     int yres;

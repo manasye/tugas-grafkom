@@ -9,7 +9,8 @@
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
 
-void init(FBUFFER *fb) {
+void init(FBUFFER *fb)
+{
     // Getting the framebuffer
     int temp = open("/dev/fb0", O_RDWR);
     struct fb_var_screeninfo vinfo;
@@ -25,19 +26,24 @@ void init(FBUFFER *fb) {
     assert((*fb).buf != MAP_FAILED);
 }
 
-void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb) {
+void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb)
+{
     (*fb).buf[y * (*fb).xres + x] = rgb;
 }
 
-void clear(FBUFFER *fb) {
+void clear(FBUFFER *fb)
+{
     int i, j;
-    for (j = 0;j < (*fb).yres; j++) {
-        for (i = 0;i < (*fb).xres; i++) {
-            colorPixel(fb,i,j,BLACK);
+    for (j = 0; j < (*fb).yres; j++)
+    {
+        for (i = 0; i < (*fb).xres; i++)
+        {
+            colorPixel(fb, i, j, BLACK);
         }
     }
 }
 
-void destroy(FBUFFER *fb) {
-    munmap(&((*fb).buf),(*fb).xres * 4 * (*fb).yres);
+void destroy(FBUFFER *fb)
+{
+    munmap(&((*fb).buf), (*fb).xres * 4 * (*fb).yres);
 }
