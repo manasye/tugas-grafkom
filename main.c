@@ -27,7 +27,7 @@ int main()
 
     clear(&fb);
 
-    drawLine(fb, 10, 10, 300, 400);
+    drawLine(fb, 20, 20, 400, 20, WHITE);
 
     // Pause
     scanf("%c", &temp);
