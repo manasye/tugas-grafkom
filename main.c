@@ -2,6 +2,7 @@
 #include "line.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define FILENAME "test.txt"
 
@@ -15,7 +16,8 @@ int main()
     char temp;
     FBUFFER fb;
     char intBuffer[5];
-    int curX, curY;
+    int curX0, curY0, curX1, curY1;
+    char colorHex[9];
 
     init(&fb);
 
@@ -27,7 +29,71 @@ int main()
 
     clear(&fb);
 
-    drawLine(fb, 20, 20, 400, 20, WHITE);
+    // Open file
+    FILE *inputFile = fopen(FILENAME, "r");
+    temp = getc(inputFile);
+    while (temp != EOF)
+    {
+        while ((temp != '\n') && (temp != EOF))
+        {
+            curX0 = 0;
+            curY0 = 0;
+            curX1 = 0;
+            curY1 = 0;
+
+            // Fetch X0 coordinate
+            while (temp != ',')
+            {
+                curX0 = (curX0 * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            temp = getc(inputFile);
+
+            // Fetch Y0 coordinate
+            while (temp != ',')
+            {
+                curY0 = (curY0 * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            temp = getc(inputFile);
+
+            // Fetch X1 coordinate
+            while (temp != ',')
+            {
+                curX1 = (curX1 * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            temp = getc(inputFile);
+
+            // Fetch Y1 coordinate
+            while (temp != ',')
+            {
+                curY1 = (curY1 * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            temp = getc(inputFile);
+
+            // Get the hexcode color
+            while ((temp != '\n') && (temp != EOF))
+            {
+                curY0 = (curY0 * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            // Draw that line
+            drawLine(fb, curX0, curY0, curX1, curY1, WHITE);
+
+            if (temp != EOF)
+            {
+                temp = getc(inputFile);
+            }
+        }
+    }
+    fclose(inputFile);
 
     // Pause
     scanf("%c", &temp);
