@@ -12,7 +12,7 @@ typedef struct
 
 void init(FBUFFER *fb);
 
-void colorPixel(FBUFFER *fb, int x, int y, uint32_t color);
+void colorPixel(FBUFFER *fb, int x, int y, int r, int g, int b);
 
 void clear(FBUFFER *fb);
 

@@ -17,7 +17,7 @@ int main()
     FBUFFER fb;
     char intBuffer[5];
     int curX0, curY0, curX1, curY1;
-    char colorHex[9];
+    int r, g, b;
 
     init(&fb);
 
@@ -36,10 +36,8 @@ int main()
     {
         while ((temp != '\n') && (temp != EOF))
         {
-            curX0 = 0;
-            curY0 = 0;
-            curX1 = 0;
-            curY1 = 0;
+            curX0 = 0, curY0 = 0, curX1 = 0, curY1 = 0;
+            r = 0, g = 0, b = 0;
 
             // Fetch X0 coordinate
             while (temp != ',')
@@ -77,15 +75,33 @@ int main()
 
             temp = getc(inputFile);
 
-            // Get the hexcode color
+            // Fetch color Red
+            while (temp != ',')
+            {
+                r = (r * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            temp = getc(inputFile);
+
+            // Fetch green color
+            while (temp != ',')
+            {
+                g = (g * 10) + charToInt(temp);
+                temp = getc(inputFile);
+            }
+
+            temp = getc(inputFile);
+
+            // Fetch blue color
             while ((temp != '\n') && (temp != EOF))
             {
-                curY0 = (curY0 * 10) + charToInt(temp);
+                b = (b * 10) + charToInt(temp);
                 temp = getc(inputFile);
             }
 
             // Draw that line
-            drawLine(fb, curX0, curY0, curX1, curY1, WHITE);
+            drawLine(fb, curX0, curY0, curX1, curY1, r, g, b);
 
             if (temp != EOF)
             {

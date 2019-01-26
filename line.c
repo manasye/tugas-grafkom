@@ -4,7 +4,7 @@
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
 
-void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
+void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, int r, int g, int b)
 {
     int dx, dy, control, currX, currY, doubledx, doubledy;
 
@@ -17,7 +17,7 @@ void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
     {
         for (int i = x0; i <= x1; i++)
         {
-            colorPixel(&fb, i, y0, rgb);
+            colorPixel(&fb, i, y0, r, g, b);
         }
     }
     // Vertical line
@@ -25,7 +25,7 @@ void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
     {
         for (int i = y0; i <= y1; i++)
         {
-            colorPixel(&fb, x0, i, rgb);
+            colorPixel(&fb, x0, i, r, g, b);
         }
     }
     // Line that have gradient
@@ -41,7 +41,7 @@ void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
 
         while (currX < x1)
         {
-            colorPixel(&fb, currX, currY, rgb);
+            colorPixel(&fb, currX, currY, r, g, b);
 
             if (control > 0)
             {
