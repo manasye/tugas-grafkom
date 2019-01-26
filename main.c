@@ -10,6 +10,33 @@ int charToInt(char n)
 {
     return ((int)(n - '0'));
 }
+ 
+int singleHexToInt(char n) {
+    if (n == 'a' || n == 'A') 
+    {
+        return 10;
+    }
+    else if (n == 'b' || n == 'B')
+    {
+        return 11;
+    }
+    else if (n == 'c' || n == 'C') {
+        return 12;
+    }
+    else if (n == 'd' || n == 'D') {
+        return 13;
+    }
+    else if (n == 'e' || n == 'E') {
+        return 14;
+    }
+    else if (n == 'f' || n == 'F') {
+        return 15;
+    }
+    else
+    {
+        return charToInt(n);
+    }
+}
 
 int main()
 {
@@ -17,7 +44,7 @@ int main()
     FBUFFER fb;
     char intBuffer[5];
     int curX0, curY0, curX1, curY1;
-    int r, g, b;
+    uint32_t rgb;
 
     init(&fb);
 
@@ -37,7 +64,7 @@ int main()
         while ((temp != '\n') && (temp != EOF))
         {
             curX0 = 0, curY0 = 0, curX1 = 0, curY1 = 0;
-            r = 0, g = 0, b = 0;
+            rgb = 0;
 
             // Fetch X0 coordinate
             while (temp != ',')
@@ -75,33 +102,15 @@ int main()
 
             temp = getc(inputFile);
 
-            // Fetch color Red
-            while (temp != ',')
-            {
-                r = (r * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
-
-            temp = getc(inputFile);
-
-            // Fetch green color
-            while (temp != ',')
-            {
-                g = (g * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
-
-            temp = getc(inputFile);
-
-            // Fetch blue color
+            // Fetch RGB hex value
             while ((temp != '\n') && (temp != EOF))
             {
-                b = (b * 10) + charToInt(temp);
+                rgb = (rgb << 4) + singleHexToInt(temp);
                 temp = getc(inputFile);
             }
 
             // Draw that line
-            drawLine(fb, curX0, curY0, curX1, curY1, r, g, b);
+            drawLine(fb, curX0, curY0, curX1, curY1, rgb);
 
             if (temp != EOF)
             {

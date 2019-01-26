@@ -31,9 +31,8 @@ int rgbToHex(int r, int g, int b)
     return (r << 16) | (g << 8) | b;
 }
 
-void colorPixel(FBUFFER *fb, int x, int y, int r, int g, int b)
+void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb)
 {
-    int rgb = rgbToHex(r, g, b);
     (*fb).buf[y * (*fb).xres + x] = rgb;
 }
 
@@ -44,7 +43,7 @@ void clear(FBUFFER *fb)
     {
         for (i = 0; i < (*fb).xres; i++)
         {
-            colorPixel(fb, i, j, 0, 0, 0);
+            colorPixel(fb, i, j, BLACK);
         }
     }
 }
