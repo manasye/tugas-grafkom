@@ -1,9 +1,6 @@
 #include "framebuffer.h"
 #include "line.h"
 
-#define BLACK 0x000000
-#define WHITE 0xFFFFFF
-
 void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
 {
     int dx, dy, control, currX, currY, doubledx, doubledy;
@@ -47,6 +44,10 @@ void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
             {
                 currY += 1;
                 control -= doubledx;
+            }
+            else
+            {
+                currY -= 1;
             }
 
             control += doubledy;

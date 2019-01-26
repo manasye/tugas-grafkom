@@ -1,5 +1,6 @@
 #include "framebuffer.h"
 #include "line.h"
+#include "polygon.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,9 +11,9 @@ int charToInt(char n)
 {
     return ((int)(n - '0'));
 }
- 
+
 int singleHexToInt(char n) {
-    if (n == 'a' || n == 'A') 
+    if (n == 'a' || n == 'A')
     {
         return 10;
     }
@@ -119,6 +120,10 @@ int main()
         }
     }
     fclose(inputFile);
+
+    //drawOctagon & drawTriangle bisa di delete hanya membantu menentukan titik dan menulis ke file
+    // drawOctagon(fb, 550, 200, 30, YELLOW);
+    // drawTriangle(fb, 400, 100, 500, BLUE);
 
     // Pause
     scanf("%c", &temp);
