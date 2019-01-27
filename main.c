@@ -1,6 +1,6 @@
 #include "framebuffer.h"
 #include "line.h"
-#include "polygon.h"
+// #include "polygon.h" //read README.md for compile
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,9 +121,14 @@ int main()
     }
     fclose(inputFile);
 
-    //drawOctagon & drawTriangle bisa di delete hanya membantu menentukan titik dan menulis ke file
-    // drawOctagon(fb, 550, 200, 30, YELLOW);
-    // drawTriangle(fb, 400, 100, 500, BLUE);
+    //drawOctagon, drawSquare, drawHome, drawTree, & drawTriangle bisa di delete hanya membantu menentukan titik dan menulis ke file
+    // drawOctagon(fb, 550, 200, 30, YELLOW); //draw Sun
+    // drawTriangle(fb, 400, 100, 500, BLUE); //draw Mountain
+
+    // Draw Home and trees
+    // drawHome(fb, 705, 430);
+    // drawHome(fb, 825, 430);
+    // drawTree(fb, 100, 450, 30, 80);
 
     // Pause
     scanf("%c", &temp);
