@@ -16,8 +16,13 @@ void drawOctagon(FBUFFER fb, int x0, int y0, int length, uint32_t rgb)
     x_ = x0 + length;
     y_ = y0;
 
+    int x_rad_top_bot = x0 + round(length/2);
+    int lengthRad = 25;
+
     drawLine(fb, x0, y0, x_, y_, rgb);
+    drawLine(fb, x_rad_top_bot, y0 - 35, x_rad_top_bot, y0 - 10,rgb);
     fprintf(f, "%d,%d,%d,%d,%x\n", x0, y0, x_, y_, rgb);
+    fprintf(f, "%d,%d,%d,%d,%x\n", x_rad_top_bot, y0 - 35, x_rad_top_bot, y0 - 10,rgb);
 
     for (int i = 0; i < 3; i++)
     {
@@ -67,6 +72,37 @@ void drawOctagon(FBUFFER fb, int x0, int y0, int length, uint32_t rgb)
             }
         }
 
+        //draw Radiation
+        int x_radiation_1, x_radiation_2;
+        int y_radiation = y_ + round(delta_y / 2);
+
+        if (delta_x > 0){
+            x_radiation_1 = x_ + round(delta_x / 2) + 35;
+            x_radiation_2 = x0 - round(delta_x / 2) - 35;
+            y_radiation -= lengthRad;
+            drawLine(fb, x_radiation_1-lengthRad, y_radiation+lengthRad, x_radiation_1, y_radiation, rgb);
+            drawLine(fb, x_radiation_2, y_radiation, x_radiation_2+lengthRad, y_radiation+lengthRad, rgb);
+
+            fprintf(f, "%d,%d,%d,%d,%x\n", x_radiation_1-lengthRad, y_radiation+lengthRad, x_radiation_1, y_radiation, rgb);
+            fprintf(f, "%d,%d,%d,%d,%x\n", x_radiation_2, y_radiation, x_radiation_2+lengthRad, y_radiation+lengthRad, rgb);
+        } else if (delta_x < 0) {
+            x_radiation_1 = x_ + round(delta_x / 2) + 35;
+            x_radiation_2 = x0 - round(delta_x / 2) - 35;
+            drawLine(fb, x_radiation_1-lengthRad, y_radiation, x_radiation_1, y_radiation+lengthRad, rgb);
+            drawLine(fb, x_radiation_2, y_radiation+lengthRad, x_radiation_2+lengthRad, y_radiation, rgb);
+
+            fprintf(f, "%d,%d,%d,%d,%x\n", x_radiation_1-lengthRad, y_radiation, x_radiation_1, y_radiation+lengthRad, rgb);
+            fprintf(f, "%d,%d,%d,%d,%x\n", x_radiation_2, y_radiation+lengthRad, x_radiation_2+lengthRad, y_radiation, rgb);
+        } else {
+            x_radiation_1 = x02 + 35;
+            x_radiation_2 = x01 - 35;
+            drawLine(fb, x_radiation_1-lengthRad, y_radiation, x_radiation_1, y_radiation, rgb);
+            drawLine(fb, x_radiation_2, y_radiation, x_radiation_2+lengthRad, y_radiation, rgb);
+
+            fprintf(f, "%d,%d,%d,%d,%x\n", x_radiation_1-lengthRad, y_radiation, x_radiation_1, y_radiation, rgb);
+            fprintf(f, "%d,%d,%d,%d,%x\n", x_radiation_2, y_radiation, x_radiation_2+lengthRad, y_radiation, rgb);
+        }
+
         x0 = x01;
         y0 = y01;
         x_ = x02;
@@ -77,6 +113,10 @@ void drawOctagon(FBUFFER fb, int x0, int y0, int length, uint32_t rgb)
 
     drawLine(fb, x0, y0, x_, y_, rgb);
     fprintf(f, "%d,%d,%d,%d,%x\n", x0, y0, x_, y_, rgb);
+
+    drawLine(fb, x_rad_top_bot, y0 + 10, x_rad_top_bot, y0 + 35,rgb);
+    fprintf(f, "%d,%d,%d,%d,%x\n", x_rad_top_bot, y0 + 10, x_rad_top_bot, y0 + 35,rgb);
+
     fclose(f);
 }
 
@@ -169,7 +209,7 @@ void drawHome(FBUFFER fb, int x0, int y0)
     fprintf(f, "%d,%d,%d,%d,%x\n",x_vertical, y_vertical, x_vertical, y_vertical+25, BROWN);
     fprintf(f, "%d,%d,%d,%d,%x\n",x_horizontal, y_horizontal, x_horizontal+25, y_horizontal, BROWN);
     fclose(f);
-    
+
     //draw Door
     drawRectangle(fb, x0+25, y0+100-40, 30, 40, BROWN);
 }

@@ -122,13 +122,13 @@ int main()
     fclose(inputFile);
 
     //drawOctagon, drawSquare, drawHome, drawTree, & drawTriangle bisa di delete hanya membantu menentukan titik dan menulis ke file
-    // drawOctagon(fb, 550, 200, 30, YELLOW); //draw Sun
-    // drawTriangle(fb, 400, 100, 500, BLUE); //draw Mountain
+    // drawOctagon(fb, 550, 100, 30, YELLOW); //draw Sun
+    // drawTriangle(fb, 400, 0, 500, BLUE); //draw Mountain
 
     // Draw Home and trees
-    // drawHome(fb, 705, 430);
-    // drawHome(fb, 825, 430);
-    // drawTree(fb, 100, 450, 30, 80);
+    // drawHome(fb, 705, 330);
+    // drawHome(fb, 825, 330);
+    // drawTree(fb, 100, 350, 30, 80);
 
     // Pause
     scanf("%c", &temp);
