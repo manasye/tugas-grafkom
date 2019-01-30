@@ -4,11 +4,6 @@
 void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
 {
     int dx, dy, control, currX, currY, doubledx, doubledy;
-
-    // Check delta of x and y
-    dx = x1 - x0;
-    dy = y1 - y0;
-
     int temp;
 
     if (x0 > x1)
@@ -24,6 +19,10 @@ void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
         y1 = y0;
         y0 = temp;
     }
+
+    // Check delta of x and y
+    dx = x1 - x0;
+    dy = y1 - y0;
 
     // Horizontal line
     if (dy == 0)

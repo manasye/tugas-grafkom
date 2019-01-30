@@ -134,7 +134,7 @@ int main()
     // drawHome(fb, 705, 330);
     // drawHome(fb, 825, 330);
     // drawTree(fb, 100, 350, 30, 80);
-    drawLine(fb, 300, 300, 300, 100, WHITE);
+    drawLine(fb, 300, 300, 100, 100, WHITE);
 
     // Pause
     scanf("%c", &temp);
