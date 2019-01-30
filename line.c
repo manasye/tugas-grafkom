@@ -9,6 +9,22 @@ void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
     dx = x1 - x0;
     dy = y1 - y0;
 
+    int temp;
+
+    if (x0 > x1)
+    {
+        temp = x1;
+        x1 = x0;
+        x0 = temp;
+    }
+
+    if (y0 > y1)
+    {
+        temp = y1;
+        y1 = y0;
+        y0 = temp;
+    }
+
     // Horizontal line
     if (dy == 0)
     {

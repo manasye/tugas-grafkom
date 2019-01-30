@@ -12,7 +12,8 @@ int charToInt(char n)
     return ((int)(n - '0'));
 }
 
-int singleHexToInt(char n) {
+int singleHexToInt(char n)
+{
     if (n == 'a' || n == 'A')
     {
         return 10;
@@ -21,16 +22,20 @@ int singleHexToInt(char n) {
     {
         return 11;
     }
-    else if (n == 'c' || n == 'C') {
+    else if (n == 'c' || n == 'C')
+    {
         return 12;
     }
-    else if (n == 'd' || n == 'D') {
+    else if (n == 'd' || n == 'D')
+    {
         return 13;
     }
-    else if (n == 'e' || n == 'E') {
+    else if (n == 'e' || n == 'E')
+    {
         return 14;
     }
-    else if (n == 'f' || n == 'F') {
+    else if (n == 'f' || n == 'F')
+    {
         return 15;
     }
     else
@@ -58,68 +63,68 @@ int main()
     clear(&fb);
 
     // Open file
-    FILE *inputFile = fopen(FILENAME, "r");
-    temp = getc(inputFile);
-    while (temp != EOF)
-    {
-        while ((temp != '\n') && (temp != EOF))
-        {
-            curX0 = 0, curY0 = 0, curX1 = 0, curY1 = 0;
-            rgb = 0;
+    // FILE *inputFile = fopen(FILENAME, "r");
+    // temp = getc(inputFile);
+    // while (temp != EOF)
+    // {
+    //     while ((temp != '\n') && (temp != EOF))
+    //     {
+    //         curX0 = 0, curY0 = 0, curX1 = 0, curY1 = 0;
+    //         rgb = 0;
 
-            // Fetch X0 coordinate
-            while (temp != ',')
-            {
-                curX0 = (curX0 * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
+    //         // Fetch X0 coordinate
+    //         while (temp != ',')
+    //         {
+    //             curX0 = (curX0 * 10) + charToInt(temp);
+    //             temp = getc(inputFile);
+    //         }
 
-            temp = getc(inputFile);
+    //         temp = getc(inputFile);
 
-            // Fetch Y0 coordinate
-            while (temp != ',')
-            {
-                curY0 = (curY0 * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
+    //         // Fetch Y0 coordinate
+    //         while (temp != ',')
+    //         {
+    //             curY0 = (curY0 * 10) + charToInt(temp);
+    //             temp = getc(inputFile);
+    //         }
 
-            temp = getc(inputFile);
+    //         temp = getc(inputFile);
 
-            // Fetch X1 coordinate
-            while (temp != ',')
-            {
-                curX1 = (curX1 * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
+    //         // Fetch X1 coordinate
+    //         while (temp != ',')
+    //         {
+    //             curX1 = (curX1 * 10) + charToInt(temp);
+    //             temp = getc(inputFile);
+    //         }
 
-            temp = getc(inputFile);
+    //         temp = getc(inputFile);
 
-            // Fetch Y1 coordinate
-            while (temp != ',')
-            {
-                curY1 = (curY1 * 10) + charToInt(temp);
-                temp = getc(inputFile);
-            }
+    //         // Fetch Y1 coordinate
+    //         while (temp != ',')
+    //         {
+    //             curY1 = (curY1 * 10) + charToInt(temp);
+    //             temp = getc(inputFile);
+    //         }
 
-            temp = getc(inputFile);
+    //         temp = getc(inputFile);
 
-            // Fetch RGB hex value
-            while ((temp != '\n') && (temp != EOF))
-            {
-                rgb = (rgb << 4) + singleHexToInt(temp);
-                temp = getc(inputFile);
-            }
+    //         // Fetch RGB hex value
+    //         while ((temp != '\n') && (temp != EOF))
+    //         {
+    //             rgb = (rgb << 4) + singleHexToInt(temp);
+    //             temp = getc(inputFile);
+    //         }
 
-            // Draw that line
-            drawLine(fb, curX0, curY0, curX1, curY1, rgb);
+    //         // Draw that line
+    //         drawLine(fb, curX0, curY0, curX1, curY1, rgb);
 
-            if (temp != EOF)
-            {
-                temp = getc(inputFile);
-            }
-        }
-    }
-    fclose(inputFile);
+    //         if (temp != EOF)
+    //         {
+    //             temp = getc(inputFile);
+    //         }
+    //     }
+    // }
+    // fclose(inputFile);
 
     //drawOctagon, drawSquare, drawHome, drawTree, & drawTriangle bisa di delete hanya membantu menentukan titik dan menulis ke file
     // drawOctagon(fb, 550, 100, 30, YELLOW); //draw Sun
@@ -129,6 +134,7 @@ int main()
     // drawHome(fb, 705, 330);
     // drawHome(fb, 825, 330);
     // drawTree(fb, 100, 350, 30, 80);
+    drawLine(fb, 300, 300, 300, 100, WHITE);
 
     // Pause
     scanf("%c", &temp);
