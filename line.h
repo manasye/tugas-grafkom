@@ -9,7 +9,7 @@
 #define BROWN 0x795548
 #define DARKRED 0xba000d
 
-void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb);
+void drawLine(FBUFFER fb, short x0, short y0, short x1, short y1, uint32_t rgb);
 
 #include "line.c"
 

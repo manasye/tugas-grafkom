@@ -1,72 +1,75 @@
 #include "framebuffer.h"
 #include "line.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void drawLine(FBUFFER fb, int x0, int y0, int x1, int y1, uint32_t rgb)
+short sign(short x)
 {
-    int dx, dy, control, currX, currY, doubledx, doubledy;
-    int temp;
-
-    if (x0 > x1)
-    {
-        temp = x1;
-        x1 = x0;
-        x0 = temp;
-    }
-
-    if (y0 > y1)
-    {
-        temp = y1;
-        y1 = y0;
-        y0 = temp;
-    }
-
-    // Check delta of x and y
-    dx = x1 - x0;
-    dy = y1 - y0;
-
-    // Horizontal line
-    if (dy == 0)
-    {
-        for (int i = x0; i <= x1; i++)
-        {
-            colorPixel(&fb, i, y0, rgb);
-        }
-    }
-    // Vertical line
-    else if (dx == 0)
-    {
-        for (int i = y0; i <= y1; i++)
-        {
-            colorPixel(&fb, x0, i, rgb);
-        }
-    }
-    // Line that have gradient
+    if (x > 0)
+        return 1;
+    else if (x < 0)
+        return -1;
     else
+        return 0;
+}
+
+void drawLine(FBUFFER fb, short x0, short y0, short x1, short y1, uint32_t rgb)
+{
+    // Check delta of x and y
+    short dx = (x1 - x0);
+    short dy = (y1 - y0);
+
+    // Store absolute delta
+    short absdx = abs(dx);
+    short absdy = abs(dy);
+
+    // Store double delta for optimization
+    short doubledx = 2 * absdx;
+    short doubledy = 2 * absdy;
+
+    if (absdy > absdx)
     {
-        // Store double delta for optimizaiton
-        doubledx = 2 * dx;
-        doubledy = 2 * dy;
+        short control = doubledx - absdy;
 
-        currX = x0;
-        currY = y0;
-        control = doubledy - dx;
+        short startY = dy > 0 ? y0 : y1;
+        short endY = dy > 0 ? y1 : y0;
+        short currX = dy > 0 ? x0 : x1;
+        short endX = dy > 0 ? x1 : x0;
 
-        while (currX < x1)
+        short increment = sign(endX - currX);
+
+        for (short y = startY; y <= endY; y++)
         {
-            colorPixel(&fb, currX, currY, rgb);
-
+            colorPixel(&fb, currX, y, rgb);
+            control += doubledx;
             if (control > 0)
             {
-                currY += 1;
+                currX += increment;
+                control -= doubledy;
+            }
+        }
+    }
+    else
+    {
+        short control = doubledy - absdx;
+
+        short startX = dx > 0 ? x0 : x1;
+        short endX = dx > 0 ? x1 : x0;
+        short currY = dx > 0 ? y0 : y1;
+        short endY = dx > 0 ? y1 : y0;
+
+        short increment = sign(endY - currY);
+
+        for (short x = startX; x <= endX; x++)
+        {
+            colorPixel(&fb, x, currY, rgb);
+            control += doubledy;
+            if (control > 0)
+            {
+                currY += increment;
                 control -= doubledx;
             }
-            else
-            {
-                currY -= 1;
-            }
-
-            control += doubledy;
-            currX += 1;
         }
     }
 }
