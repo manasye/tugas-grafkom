@@ -3,7 +3,8 @@
 
 #define PI 3.14159265
 
-typedef struct {
+typedef struct
+{
     int x;
     int y;
 } Point;
@@ -14,6 +15,7 @@ void drawSquare(FBUFFER fb, int x0, int y0, int side, uint32_t rgb);
 void drawRectangle(FBUFFER fb, int x0, int y0, int width, int height, uint32_t rgb);
 void drawHome(FBUFFER fb, int x0, int y0);
 void drawTree(FBUFFER fb, int x0, int yo, int width, int height);
+void drawCircle(FBUFFER fb, int xc, int yc, int r, uint32_t rgb);
 
 // Sets the framebuffer to draw and prepares the program to start storing control points
 void drawStart(FBUFFER *fb);

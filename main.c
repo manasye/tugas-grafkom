@@ -136,25 +136,26 @@ int main()
     // drawHome(fb, 825, 330);
     // drawTree(fb, 100, 350, 30, 80);
     */
-   
+
     drawLine(fb, 100, 100, 200, 150, WHITE);
     drawLine(fb, 200, 150, 200, 200, WHITE);
     drawLine(fb, 200, 200, 100, 300, WHITE);
     drawLine(fb, 100, 300, 0, 200, WHITE);
     drawLine(fb, 0, 200, 0, 150, WHITE);
     drawLine(fb, 0, 150, 100, 100, WHITE);
-    
 
     drawLine(fb, 300, 300, 300, 100, WHITE);
 
     drawStart(&fb);
-    drawAddPoint(30,10,WHITE);
-    drawAddPoint(80,10,YELLOW);
-    drawAddPoint(100,50,GREEN);
-    drawAddPoint(80,100,BLUE);
-    drawAddPoint(30,100,YELLOW);
-    drawAddPoint(10,50,DARKRED);
+    drawAddPoint(30, 10, WHITE);
+    drawAddPoint(80, 10, YELLOW);
+    drawAddPoint(100, 50, GREEN);
+    drawAddPoint(80, 100, BLUE);
+    drawAddPoint(30, 100, YELLOW);
+    drawAddPoint(10, 50, DARKRED);
     drawEnd();
+
+    drawCircle(fb, 300, 300, 100, YELLOW);
 
     // Pause
     scanf("%c", &temp);
