@@ -44,6 +44,102 @@ int singleHexToInt(char n)
     }
 }
 
+// Moves file pointer towards end-of-line (EOL)
+// It will also stop on EOF, so check on it's return value
+int seekToEOL(FILE * file) {
+    char c = getc(file);
+    while ((c != '\n') && (c != EOF))
+    {
+        c = getc(file);
+    }
+    return c;
+}
+
+// Reads one entry of polygon
+int readPolygon(FILE * file, FBUFFER * fb) {
+    int x, y;
+    uint32_t rgb;
+
+    char temp = getc(file);
+    if (temp == '|') {
+        temp = getc(file);
+    }
+    drawStart(fb);
+    while (temp != '|') {
+        x = 0;
+        y = 0;
+        rgb = 0;
+        // Read X
+        while (temp != ',') {
+            x = (x * 10) + charToInt(temp);
+            temp = getc(file);
+        }
+        temp = getc(file);
+        // Read Y
+        while (temp != ',') {
+            y = (y * 10) + charToInt(temp);
+            temp = getc(file);
+        }
+        temp = getc(file);
+        // Read hex color
+        while ((temp != ';') && (temp != '|')) {
+            rgb = (rgb * 16) + singleHexToInt(temp);
+            temp = getc(file);
+        }
+        // Add point
+        drawAddPoint(x,y,rgb);
+
+        if (temp != '|') {
+            temp = getc(file);
+        }
+    }
+    // Finishing drawing the polygon
+    drawEnd();
+
+    return 0;
+}
+
+// Reads one entry of circle
+int readCircle(FILE * file, FBUFFER * fb) {
+    char temp = getc(file);
+    if (temp == '|') {
+        temp = getc(file);
+    }
+    int xc = 0;
+    int yc = 0;
+    int r = 0;
+    uint32_t rgb = 0;
+    // Read X center point
+    while (temp != ',') {
+        xc = (xc * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read P2
+    while (temp != ',') {
+        yc = (yc * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read radius
+    while (temp != ',') {
+        r = (r * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read hex color
+    while (temp != '|') {
+        rgb = (rgb * 16) + singleHexToInt(temp);
+        temp = getc(file);
+    }
+    // Draw the circle
+    drawCircle(*fb,xc,yc,r,rgb);
+
+    return 0;
+}
+
+
+
 int main()
 {
     char temp;
@@ -62,105 +158,45 @@ int main()
 
     clear(&fb);
 
-    /*
     // Open file
-    // FILE *inputFile = fopen(FILENAME, "r");
-    // temp = getc(inputFile);
-    // while (temp != EOF)
-    // {
-    //     while ((temp != '\n') && (temp != EOF))
-    //     {
-    //         curX0 = 0, curY0 = 0, curX1 = 0, curY1 = 0;
-    //         rgb = 0;
+    FILE *inputFile = fopen(FILENAME, "r");
+    temp = getc(inputFile);
 
-    //         // Fetch X0 coordinate
-    //         while (temp != ',')
-    //         {
-    //             curX0 = (curX0 * 10) + charToInt(temp);
-    //             temp = getc(inputFile);
-    //         }
+    while (temp != EOF)
+    {
+        while ((temp != '\n') && (temp != EOF))
+        {
+            // Comments
+            if (temp == '#') {
+                temp = seekToEOL(inputFile);  
+            }
+            // Polygons 
+            else if ((temp == 'P') || (temp == 'p')) {
+                readPolygon(inputFile,&fb);
+                temp = getc(inputFile);
+            } 
+            // Circles
+            else if ((temp == 'C') || (temp == 'c')) {
+                readCircle(inputFile,&fb);
+                temp = getc(inputFile);
+            // Other, just advance the file pointer
+            } else {
+                temp = getc(inputFile);
+            }
+            
+        }
 
-    //         temp = getc(inputFile);
-
-    //         // Fetch Y0 coordinate
-    //         while (temp != ',')
-    //         {
-    //             curY0 = (curY0 * 10) + charToInt(temp);
-    //             temp = getc(inputFile);
-    //         }
-
-    //         temp = getc(inputFile);
-
-    //         // Fetch X1 coordinate
-    //         while (temp != ',')
-    //         {
-    //             curX1 = (curX1 * 10) + charToInt(temp);
-    //             temp = getc(inputFile);
-    //         }
-
-    //         temp = getc(inputFile);
-
-    //         // Fetch Y1 coordinate
-    //         while (temp != ',')
-    //         {
-    //             curY1 = (curY1 * 10) + charToInt(temp);
-    //             temp = getc(inputFile);
-    //         }
-
-    //         temp = getc(inputFile);
-
-    //         // Fetch RGB hex value
-    //         while ((temp != '\n') && (temp != EOF))
-    //         {
-    //             rgb = (rgb << 4) + singleHexToInt(temp);
-    //             temp = getc(inputFile);
-    //         }
-
-    //         // Draw that line
-    //         drawLine(fb, curX0, curY0, curX1, curY1, rgb);
-
-    //         if (temp != EOF)
-    //         {
-    //             temp = getc(inputFile);
-    //         }
-    //     }
-    // }
-    // fclose(inputFile);
-
-    //drawOctagon, drawSquare, drawHome, drawTree, & drawTriangle bisa di delete hanya membantu menentukan titik dan menulis ke file
-    // drawOctagon(fb, 550, 100, 30, YELLOW); //draw Sun
-    // drawTriangle(fb, 400, 0, 500, BLUE); //draw Mountain
-
-    // Draw Home and trees
-    // drawHome(fb, 705, 330);
-    // drawHome(fb, 825, 330);
-    // drawTree(fb, 100, 350, 30, 80);
-    */
-
-    drawLine(fb, 100, 100, 200, 150, WHITE);
-    drawLine(fb, 200, 150, 200, 200, WHITE);
-    drawLine(fb, 200, 200, 100, 300, WHITE);
-    drawLine(fb, 100, 300, 0, 200, WHITE);
-    drawLine(fb, 0, 200, 0, 150, WHITE);
-    drawLine(fb, 0, 150, 100, 100, WHITE);
-
-    drawLine(fb, 300, 300, 300, 100, WHITE);
-
-    drawStart(&fb);
-    drawAddPoint(30, 10, WHITE);
-    drawAddPoint(80, 10, YELLOW);
-    drawAddPoint(100, 50, GREEN);
-    drawAddPoint(80, 100, BLUE);
-    drawAddPoint(30, 100, YELLOW);
-    drawAddPoint(10, 50, DARKRED);
-    drawEnd();
-
-    drawCircle(fb, 300, 300, 100, YELLOW);
+        if (temp != EOF) {
+            temp = getc(inputFile);
+        }
+    }
+    fclose(inputFile);
 
     // Pause
     scanf("%c", &temp);
 
     clear(&fb);
+    destroy(&fb);
 
     // Turn the cursor back on
     system("setterm -cursor on");

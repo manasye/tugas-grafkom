@@ -268,7 +268,7 @@ void drawEnd()
     {
         colorPixel(currBuffer, pointList[0].x, pointList[0].y, colorList[0]);
     }
-    else
+    else if (numOfPoint > 1)
     {
         int i;
         for (i = 0; i < numOfPoint - 1; i++)
