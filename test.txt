@@ -1,26 +1,40 @@
 # This is a comment!
-P|15,15,ffffff;15,100,ffffff;115,100,ffffff;115,15,ffffff|
+# P|15,15,ffffff;15,100,ffffff;115,100,ffffff;115,15,ffffff|
 
 # Below is an example of a circle
-C|450,200,21,ff00ff| # WHEEEEEE, this is also a comment
+# C|450,200,21,ff00ff| # WHEEEEEE, this is also a comment
 
 # Below is an example of polygon(s)
-P|120,120,0000ff;120,200,0000ff;200,200,0000ff|
+# P|120,120,0000ff;120,200,0000ff;200,200,0000ff|
 
 
-# Tank
-P|200,460,ffff00;180,410,ffff00;250,360,ffff00;320,410,ffff00;300,460,ffff00| #turret head/pentagon
-P|300,400,ffff00;450,400,ffff00;450,420,ffff00;300,420,ffff00| # turret barrel
-P|130,450,ffff00;370,450,ffff00;390,540,ffff00;110,540,ffff00| # body
-C|250,550,40,ffff00| # wheel 1
-C|330,550,40,ffff00| # wheel 2
-C|170,550,40,ffff00| # wheel 3
-P|460,390,ffff00;480,350,ffff00| # blast effect up
-P|460,410,ffff00;480,410,ffff00| # blast effect middle
-P|460,430,ffff00;480,470,ffff00| # blast effect down
+# Tank1
+P|100,460,ffff00;80,410,ffff00;150,360,ffff00;220,410,ffff00;200,460,ffff00| #turret head/pentagon
+P|200,400,ffff00;350,400,ffff00;350,420,ffff00;200,420,ffff00| # turret barrel
+P|30,450,ffff00;270,450,ffff00;290,540,ffff00;10,540,ffff00| # body
+C|150,550,40,ffff00| # wheel 1
+C|230,550,40,ffff00| # wheel 2
+C|70,550,40,ffff00| # wheel 3
+P|360,390,ffff00;380,350,ffff00| # blast effect up
+P|360,410,ffff00;380,410,ffff00| # blast effect middle
+P|360,430,ffff00;380,470,ffff00| # blast effect down
+C|600,410,22,ffff00| # bullet
+P|440,400,ffff00;540,400,ffff00| # fly effect H
+P|470,420,ffff00;510,420,ffff00| # fly effect L
+
+# Tank2
+P|1100,460,ffff00;1080,410,ffff00;1150,360,ffff00;1220,410,ffff00;1200,460,ffff00| #turret head/pentagon
+P|950,400,ffff00;1100,400,ffff00;1100,420,ffff00;950,420,ffff00| # turret barrel
+P|1030,450,ffff00;1270,450,ffff00;1290,540,ffff00;1010,540,ffff00| # body
+C|1150,550,40,ffff00| # wheel 1
+C|1230,550,40,ffff00| # wheel 2
+C|1070,550,40,ffff00| # wheel 3
+P|930,390,ffff00;910,350,ffff00| # blast effect up
+P|930,410,ffff00;910,410,ffff00| # blast effect middle
+P|930,430,ffff00;910,470,ffff00| # blast effect down
 C|700,410,22,ffff00| # bullet
-P|540,400,ffff00;640,400,ffff00| # fly effect H
-P|570,420,ffff00;610,420,ffff00| # fly effect L
+P|770,400,ffff00;870,400,ffff00| # fly effect H
+P|800,420,ffff00;840,420,ffff00| # fly effect L
 
 # Pesawat
 P|900,180,f44336;1300,180,f44336;1300,80,f44336;1000,80,f44336| # body
@@ -32,3 +46,25 @@ P|1060,200,f44336;1060,250,f44336| # blast effect up 1
 P|1080,190,f44336;1080,270,f44336| # blast effect up 2
 P|1100,210,f44336;1100,245,f44336| # blast effect up 1
 C|1084,310,22,f44336| # bullet
+
+# Army
+P|10,760,ffff00;100,740,ffff00|
+P|100,740,ffff00;10,720,ffff00|
+P|100,740,ffff00;200,740,ffff00|
+P|150,740,ffff00;180,720,ffff00;250,740,ffff00;180,760,ffff00|
+C|210,740,22,ffff00|
+P|250,740,ffff00;250,730,ffff00;270,730,ffff00;270,735,ffff00;255,735,ffff00;255,740,ffff00|
+P|790,733,ffff00;810,733,ffff00|
+P|820,733,ffff00;840,733,ffff00|
+P|850,733,ffff00;870,733,ffff00|
+
+C|900,550,22,ffff00| # kepala
+P|900,570,ffff00;900,620,ffff00| # badan
+P|900,595,ffff00;880,600,ffff00| # tangan
+P|880,600,ffff00;860,575,ffff00| # tangan
+P|900,595,ffff00;930,615,ffff00| # tangan
+P|900,620,ffff00;905,660,ffff00| # kaki
+P|905,660,ffff00;925,680,ffff00| # kaki
+P|900,620,ffff00;860,630,ffff00| # kaki
+P|860,630,ffff00;880,660,ffff00| # kaki
+P|855,575,ffff00;865,575,ffff00;865,555,ffff00;860,555,ffff00;860,570,ffff00;855,570,ffff00|
