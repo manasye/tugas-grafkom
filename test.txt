@@ -23,20 +23,20 @@ P|440,400,ffff00;540,400,ffff00| # fly effect H
 P|470,420,ffff00;510,420,ffff00| # fly effect L
 
 # Tank2
-P|1100,460,ffff00;1080,410,ffff00;1150,360,ffff00;1220,410,ffff00;1200,460,ffff00| #turret head/pentagon
-P|950,400,ffff00;1100,400,ffff00;1100,420,ffff00;950,420,ffff00| # turret barrel
-P|1030,450,ffff00;1270,450,ffff00;1290,540,ffff00;1010,540,ffff00| # body
-C|1150,550,40,ffff00| # wheel 1
-C|1230,550,40,ffff00| # wheel 2
-C|1070,550,40,ffff00| # wheel 3
-P|930,390,ffff00;910,350,ffff00| # blast effect up
-P|930,410,ffff00;910,410,ffff00| # blast effect middle
-P|930,430,ffff00;910,470,ffff00| # blast effect down
-C|700,410,22,ffff00| # bullet
-P|770,400,ffff00;870,400,ffff00| # fly effect H
-P|800,420,ffff00;840,420,ffff00| # fly effect L
+P|1100,460,0b6623;1080,410,0b6623;1150,360,0b6623;1220,410,0b6623;1200,460,0b6623| #turret head/pentagon
+P|950,400,0b6623;1100,400,0b6623;1100,420,0b6623;950,420,0b6623| # turret barrel
+P|1030,450,0b6623;1270,450,0b6623;1290,540,0b6623;1010,540,0b6623| # body
+C|1150,550,40,0b6623| # wheel 1
+C|1230,550,40,0b6623| # wheel 2
+C|1070,550,40,0b6623| # wheel 3
+P|930,390,0b6623;910,350,0b6623| # blast effect up
+P|930,410,0b6623;910,410,0b6623| # blast effect middle
+P|930,430,0b6623;910,470,0b6623| # blast effect down
+C|700,410,22,0b6623| # bullet
+P|770,400,0b6623;870,400,0b6623| # fly effect H
+P|800,420,0b6623;840,420,0b6623| # fly effect L
 
-# Pesawat
+# Airplane
 P|900,180,f44336;1300,180,f44336;1300,80,f44336;1000,80,f44336| # body
 P|975,130,f44336;1050,130,f44336;1050,100,f44336;1000,100,f44336| # window
 P|1225,80,f44336;1300,80,f44336;1300,20,f44336|  # ekor
@@ -58,8 +58,8 @@ P|790,733,ffff00;810,733,ffff00|
 P|820,733,ffff00;840,733,ffff00|
 P|850,733,ffff00;870,733,ffff00|
 
-C|900,550,22,ffff00| # kepala
-P|900,570,ffff00;900,620,ffff00| # badan
+C|900,550,15,ffff00| # kepala
+P|900,565,ffff00;900,620,ffff00| # badan
 P|900,595,ffff00;880,600,ffff00| # tangan
 P|880,600,ffff00;860,575,ffff00| # tangan
 P|900,595,ffff00;930,615,ffff00| # tangan
