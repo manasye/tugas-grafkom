@@ -2,8 +2,22 @@
 P|15,15,ffffff;15,100,ffffff;115,100,ffffff;115,15,ffffff|
 
 # Below is an example of a circle
-C|450,200,50,ff00ff| # WHEEEEEE, this is also a comment
+C|450,200,21,ff00ff| # WHEEEEEE, this is also a comment
 
 # Below is an example of polygon(s)
 P|120,120,0000ff;120,200,0000ff;200,200,0000ff|
-P|200,500,ffff00;180,450,ffff00;250,400,ffff00;320,450,ffff00;300,500,ffff00|
+
+
+# Tank
+P|200,460,ffff00;180,410,ffff00;250,360,ffff00;320,410,ffff00;300,460,ffff00| #turret head/pentagon
+P|300,400,ffff00;450,400,ffff00;450,420,ffff00;300,420,ffff00| # turret barrel
+P|130,450,ffff00;370,450,ffff00;390,540,ffff00;110,540,ffff00| # body
+C|250,550,40,ffff00| # wheel 1
+C|330,550,40,ffff00| # wheel 2
+C|170,550,40,ffff00| # wheel 3
+P|460,390,ffff00;480,350,ffff00| # blast effect up
+P|460,410,ffff00;480,410,ffff00| # blast effect middle
+P|460,430,ffff00;480,470,ffff00| # blast effect down
+C|700,410,22,ffff00| # bullet
+P|540,400,ffff00;640,400,ffff00| # fly effect H
+P|570,420,ffff00;610,420,ffff00| # fly effect L
