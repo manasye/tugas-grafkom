@@ -138,6 +138,50 @@ int readCircle(FILE * file, FBUFFER * fb) {
     return 0;
 }
 
+// Reads one entry of line
+int readLine(FILE * file, FBUFFER * fb) {
+    char temp = getc(file);
+    if (temp == '|') {
+        temp = getc(file);
+    }
+    int x1 = 0;
+    int y1 = 0;
+    int x2 = 0;
+    int y2 = 0;
+    uint32_t rgb = 0;
+    // Read X1
+    while (temp != ',') {
+        x1 = (x1 * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read Y1
+    while (temp != ',') {
+        y1 = (y1 * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read X2
+    while (temp != ',') {
+        x2 = (x2 * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read Y2
+    while (temp != ',') {
+        y2 = (y2 * 10) + charToInt(temp);
+        temp = getc(file);
+    }
+    temp = getc(file);
+    // Read hexcolor
+    while (temp != '|') {
+        rgb = (rgb * 16) + singleHexToInt(temp);
+        temp = getc(file);
+    }
+    // Draw the line
+    drawLine(*fb,x1,y1,x2,y2,rgb);
+    return 0;
+}
 
 
 int main()
@@ -179,8 +223,14 @@ int main()
             else if ((temp == 'C') || (temp == 'c')) {
                 readCircle(inputFile,&fb);
                 temp = getc(inputFile);
+            } 
+            // Lines
+            else if ((temp == 'L') || (temp == 'l')) {
+                readLine(inputFile, &fb);
+                temp = getc(inputFile);
+            }
             // Other, just advance the file pointer
-            } else {
+            else {
                 temp = getc(inputFile);
             }
             

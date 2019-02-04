@@ -7,34 +7,37 @@
 # Below is an example of polygon(s)
 # P|120,120,0000ff;120,200,0000ff;200,200,0000ff|
 
+# Below is an example of a line
+# L|100,100,200,200,ffffff|
 
-# Tank1
+
+# Tank 1
 P|100,460,ffff00;80,410,ffff00;150,360,ffff00;220,410,ffff00;200,460,ffff00| #turret head/pentagon
 P|200,400,ffff00;350,400,ffff00;350,420,ffff00;200,420,ffff00| # turret barrel
 P|30,450,ffff00;270,450,ffff00;290,540,ffff00;10,540,ffff00| # body
 C|150,550,40,ffff00| # wheel 1
 C|230,550,40,ffff00| # wheel 2
 C|70,550,40,ffff00| # wheel 3
-P|360,390,ffff00;380,350,ffff00| # blast effect up
-P|360,410,ffff00;380,410,ffff00| # blast effect middle
-P|360,430,ffff00;380,470,ffff00| # blast effect down
+L|360,390,380,350,ffff00| # blast effect up
+L|360,410,380,410,ffff00| # blast effect middle
+L|360,430,380,470,ffff00| # blast effect down
 C|600,410,22,ffff00| # bullet
-P|440,400,ffff00;540,400,ffff00| # fly effect H
-P|470,420,ffff00;510,420,ffff00| # fly effect L
+L|440,400,540,400,ffff00| # fly effect H
+L|470,420,510,420,ffff00| # fly effect L
 
-# Tank2
+# Tank 2
 P|1100,460,0b6623;1080,410,0b6623;1150,360,0b6623;1220,410,0b6623;1200,460,0b6623| #turret head/pentagon
 P|950,400,0b6623;1100,400,0b6623;1100,420,0b6623;950,420,0b6623| # turret barrel
 P|1030,450,0b6623;1270,450,0b6623;1290,540,0b6623;1010,540,0b6623| # body
 C|1150,550,40,0b6623| # wheel 1
 C|1230,550,40,0b6623| # wheel 2
 C|1070,550,40,0b6623| # wheel 3
-P|930,390,0b6623;910,350,0b6623| # blast effect up
-P|930,410,0b6623;910,410,0b6623| # blast effect middle
-P|930,430,0b6623;910,470,0b6623| # blast effect down
+L|930,390,910,350,0b6623| # blast effect up
+L|930,410,910,410,0b6623| # blast effect middle
+L|930,430,910,470,0b6623| # blast effect down
 C|700,410,22,0b6623| # bullet
-P|770,400,0b6623;870,400,0b6623| # fly effect H
-P|800,420,0b6623;840,420,0b6623| # fly effect L
+L|770,400,870,400,0b6623| # fly effect H
+L|800,420,840,420,0b6623| # fly effect L
 
 # Airplane
 P|900,180,f44336;1300,180,f44336;1300,80,f44336;1000,80,f44336| # body
@@ -42,29 +45,29 @@ P|975,130,f44336;1050,130,f44336;1050,100,f44336;1000,100,f44336| # window
 P|1225,80,f44336;1300,80,f44336;1300,20,f44336|  # ekor
 P|1080,130,f44336;1130,130,f44336;1280,300,f44336;1180,250,f44336| # sayap ke arah luar
 P|1050,80,f44336;1100,80,f44336;1050,5,f44336;1020,30,f44336| # sayap ke arah dalam
-P|1060,200,f44336;1060,250,f44336| # blast effect up 1
-P|1080,190,f44336;1080,270,f44336| # blast effect up 2
-P|1100,210,f44336;1100,245,f44336| # blast effect up 1
+L|1060,200,1060,250,f44336| # blast effect up 1
+L|1080,190,1080,270,f44336| # blast effect up 2
+L|1100,210,1100,245,f44336| # blast effect up 1
 C|1084,310,22,f44336| # bullet
 
 # Army
-P|10,760,ffff00;100,740,ffff00|
-P|100,740,ffff00;10,720,ffff00|
-P|100,740,ffff00;200,740,ffff00|
+L|10,760,100,740,ffff00|
+L|100,740,10,720,ffff00|
+L|100,740,200,740,ffff00|
 P|150,740,ffff00;180,720,ffff00;250,740,ffff00;180,760,ffff00|
 C|210,740,22,ffff00|
 P|250,740,ffff00;250,730,ffff00;270,730,ffff00;270,735,ffff00;255,735,ffff00;255,740,ffff00|
-P|790,733,ffff00;810,733,ffff00|
-P|820,733,ffff00;840,733,ffff00|
-P|850,733,ffff00;870,733,ffff00|
+L|790,733,810,733,ffff00|
+L|820,733,840,733,ffff00|
+L|850,733,870,733,ffff00|
 
 C|900,550,15,ffff00| # kepala
-P|900,565,ffff00;900,620,ffff00| # badan
-P|900,595,ffff00;880,600,ffff00| # tangan
-P|880,600,ffff00;860,575,ffff00| # tangan
-P|900,595,ffff00;930,615,ffff00| # tangan
-P|900,620,ffff00;905,660,ffff00| # kaki
-P|905,660,ffff00;925,680,ffff00| # kaki
-P|900,620,ffff00;860,630,ffff00| # kaki
-P|860,630,ffff00;880,660,ffff00| # kaki
+L|900,565,900,620,ffff00| # badan
+L|900,595,880,600,ffff00| # tangan
+L|880,600,860,575,ffff00| # tangan
+L|900,595,930,615,ffff00| # tangan
+L|900,620,905,660,ffff00| # kaki
+L|905,660,925,680,ffff00| # kaki
+L|900,620,860,630,ffff00| # kaki
+L|860,630,880,660,ffff00| # kaki
 P|855,575,ffff00;865,575,ffff00;865,555,ffff00;860,555,ffff00;860,570,ffff00;855,570,ffff00|
