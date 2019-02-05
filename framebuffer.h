@@ -6,12 +6,13 @@
 // Struct definition for FBUFFER
 typedef struct
 {
-    uint32_t *buf;
+    uint32_t * frameBuffer;
+    uint32_t * backBuffer;
     int xres;
     int yres;
 } FBUFFER;
 
-// Initialize the framebuffer : gets info & a shared-mapping to the framebuffer
+// Initialize the framebuffer : gets info, a shared-mapping to the framebuffer, and a back-buffer
 // YOU SHOULD ALWAYS CALL THIS FIRST BEFORE UTILIZING THE FRAMEBUFFER STRUCT
 void init(FBUFFER *fb);
 
@@ -21,7 +22,10 @@ void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb);
 // Flush the framebuffer with black
 void clear(FBUFFER *fb);
 
-// Removes the shared-mapping
+// Flush back buffer to frame-buffer
+void swapBuffer(FBUFFER * fb);
+
+// Removes the shared-mapping and deallocates back-buffer
 void destroy(FBUFFER *fb);
 
 #include "framebuffer.c"

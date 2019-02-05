@@ -4,6 +4,8 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #define BLACK 0x000000
@@ -22,8 +24,10 @@ void init(FBUFFER *fb)
     (*fb).xres = finfo.line_length / 4;
     (*fb).yres = vinfo.yres_virtual;
     // Getting the framebuffer memory
-    (*fb).buf = mmap(NULL, finfo.line_length * (*fb).yres, PROT_READ | PROT_WRITE, MAP_SHARED, temp, 0);
-    assert((*fb).buf != MAP_FAILED);
+    (*fb).frameBuffer = mmap(NULL, finfo.line_length * (*fb).yres, PROT_READ | PROT_WRITE, MAP_SHARED, temp, 0);
+    assert((*fb).frameBuffer != MAP_FAILED);
+    // Allocates back buffer
+    (*fb).backBuffer = malloc(finfo.line_length * (*fb).yres);
 }
 
 int rgbToHex(int r, int g, int b)
@@ -33,7 +37,7 @@ int rgbToHex(int r, int g, int b)
 
 void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb)
 {
-    (*fb).buf[y * (*fb).xres + x] = rgb;
+    (*fb).backBuffer[y * (*fb).xres + x] = rgb;
 }
 
 void clear(FBUFFER *fb)
@@ -48,7 +52,12 @@ void clear(FBUFFER *fb)
     }
 }
 
+void swapBuffer(FBUFFER * fb) {
+    memcpy((*fb).frameBuffer, (*fb).backBuffer, (*fb).xres * 4 * (*fb).yres);
+}
+
 void destroy(FBUFFER *fb)
 {
-    munmap(&((*fb).buf), (*fb).xres * 4 * (*fb).yres);
+    munmap(&((*fb).frameBuffer), (*fb).xres * 4 * (*fb).yres);
+    free((*fb).backBuffer);
 }

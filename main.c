@@ -201,6 +201,7 @@ int main()
     system("setterm -cursor off");
 
     clear(&fb);
+    swapBuffer(&fb);
 
     // Open file
     FILE *inputFile = fopen(FILENAME, "r");
@@ -241,11 +242,13 @@ int main()
         }
     }
     fclose(inputFile);
+    swapBuffer(&fb);
 
     // Pause
     scanf("%c", &temp);
 
     clear(&fb);
+    swapBuffer(&fb);
     destroy(&fb);
 
     // Turn the cursor back on
