@@ -47,6 +47,33 @@ void drawEnd()
     }
 }
 
+void initPolygon(Polygon * poly)
+{
+    (*poly).listOfPoint = (Point *) malloc(sizeof(Point));
+    (*poly).listOfColors = malloc(sizeof(uint32_t));
+    (*poly).numOfPoint = 0;
+}
+
+void addPointPolygon(Polygon * poly, int x, int y, uint32_t rgb)
+{
+    (*poly).listOfPoint[(*poly).numOfPoint].x = x;
+    (*poly).listOfPoint[(*poly).numOfPoint].y = y;
+    (*poly).listOfColors[(*poly).numOfPoint] = rgb;
+    (*poly).listOfPoint = (Point *) realloc((*poly).listOfPoint, ((*poly).numOfPoint + 2) * sizeof(Point));
+    (*poly).listOfColors = (uint32_t *) realloc((*poly).listOfColors, ((*poly).numOfPoint + 2) * sizeof(uint32_t)); 
+    (*poly).numOfPoint++;
+}
+
+void drawPolygon(FBUFFER * fb, Polygon poly)
+{
+    drawStart(fb);
+    int i;
+    for (i = 0; i < poly.numOfPoint; i++) {
+        drawAddPoint(poly.listOfPoint[i].x, poly.listOfPoint[i].y, poly.listOfColors[i]);
+    }
+    drawEnd();
+}
+
 void drawOtherCirclePixels(FBUFFER fb, int xc, int yc, int x, int y, uint32_t rgb)
 {
     colorPixel(&fb, xc + x, yc + y, rgb);

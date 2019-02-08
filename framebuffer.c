@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <linux/fb.h>
+#include <pthread.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <stdlib.h>
@@ -27,7 +28,10 @@ void init(FBUFFER *fb)
     (*fb).frameBuffer = mmap(NULL, finfo.line_length * (*fb).yres, PROT_READ | PROT_WRITE, MAP_SHARED, temp, 0);
     assert((*fb).frameBuffer != MAP_FAILED);
     // Allocates back buffer
-    (*fb).backBuffer = malloc(finfo.line_length * (*fb).yres);
+    (*fb).backBuffer1 = malloc(finfo.line_length * (*fb).yres);
+    (*fb).backBuffer2 = malloc(finfo.line_length * (*fb).yres);
+    // Sets current back buffer to the first one
+    (*fb).currentBuffer = (*fb).backBuffer1;
 }
 
 int rgbToHex(int r, int g, int b)
@@ -37,7 +41,7 @@ int rgbToHex(int r, int g, int b)
 
 void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb)
 {
-    (*fb).backBuffer[y * (*fb).xres + x] = rgb;
+    (*fb).currentBuffer[y * (*fb).xres + x] = rgb;
 }
 
 void clear(FBUFFER *fb)
@@ -53,11 +57,12 @@ void clear(FBUFFER *fb)
 }
 
 void swapBuffer(FBUFFER * fb) {
-    memcpy((*fb).frameBuffer, (*fb).backBuffer, (*fb).xres * 4 * (*fb).yres);
+    memcpy((*fb).frameBuffer, (*fb).currentBuffer, (*fb).xres * 4 * (*fb).yres);
 }
 
 void destroy(FBUFFER *fb)
 {
     munmap(&((*fb).frameBuffer), (*fb).xres * 4 * (*fb).yres);
-    free((*fb).backBuffer);
+    free((*fb).backBuffer1);
+    free((*fb).backBuffer2);
 }

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define FILENAME "test.txt"
 
@@ -56,15 +57,17 @@ int seekToEOL(FILE * file) {
 }
 
 // Reads one entry of polygon
-int readPolygon(FILE * file, FBUFFER * fb) {
+Polygon readPolygon(FILE * file, FBUFFER * fb) {
     int x, y;
     uint32_t rgb;
+    Polygon poly;
+    initPolygon(&poly);
 
     char temp = getc(file);
     if (temp == '|') {
         temp = getc(file);
     }
-    drawStart(fb);
+
     while (temp != '|') {
         x = 0;
         y = 0;
@@ -87,16 +90,16 @@ int readPolygon(FILE * file, FBUFFER * fb) {
             temp = getc(file);
         }
         // Add point
-        drawAddPoint(x,y,rgb);
+        addPointPolygon(&poly,x,y,rgb);
 
         if (temp != '|') {
             temp = getc(file);
         }
     }
     // Finishing drawing the polygon
-    drawEnd();
+    // drawPolygon(fb,poly);
 
-    return 0;
+    return poly;
 }
 
 // Reads one entry of circle
@@ -189,8 +192,12 @@ int main()
     char temp;
     FBUFFER fb;
     char intBuffer[5];
-    int curX0, curY0, curX1, curY1;
+    int curX0, curY0, curX1, curY1, numOfPolygon;
+    Polygon * listOfPolygon;
     uint32_t rgb;
+
+    listOfPolygon = (Polygon *) malloc(sizeof(Polygon));
+    numOfPolygon = 0;
 
     init(&fb);
 
@@ -217,7 +224,9 @@ int main()
             }
             // Polygons 
             else if ((temp == 'P') || (temp == 'p')) {
-                readPolygon(inputFile,&fb);
+                listOfPolygon[numOfPolygon] = readPolygon(inputFile,&fb);
+                numOfPolygon++;
+                listOfPolygon = (Polygon *) realloc (listOfPolygon, (numOfPolygon + 1) * sizeof(Polygon));
                 temp = getc(inputFile);
             } 
             // Circles
@@ -242,6 +251,12 @@ int main()
         }
     }
     fclose(inputFile);
+
+    int i;
+    for (i = 0; i < numOfPolygon; i++) {
+        drawPolygon(&fb,listOfPolygon[i]);
+    }
+
     swapBuffer(&fb);
 
     // Pause

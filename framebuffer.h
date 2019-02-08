@@ -7,10 +7,14 @@
 typedef struct
 {
     uint32_t * frameBuffer;
-    uint32_t * backBuffer;
+    uint32_t * backBuffer1;
+    uint32_t * backBuffer2;
+    uint32_t * currentBuffer;
     int xres;
     int yres;
 } FBUFFER;
+
+// YOU SHOULD ALWAYS USE THESE FUNCTIONS BELOW TO DO OPERATIONS WITH THE FRAMEBUFFER
 
 // Initialize the framebuffer : gets info, a shared-mapping to the framebuffer, and a back-buffer
 // YOU SHOULD ALWAYS CALL THIS FIRST BEFORE UTILIZING THE FRAMEBUFFER STRUCT
