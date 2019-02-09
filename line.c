@@ -21,7 +21,7 @@ Line makeLine(short x1, short y1, short x2, short y2, uint32_t rgb)
     line.P1.y = y1;
     line.P2.x = x2;
     line.P2.y = y2;
-    line.color = rgb;   
+    line.color = rgb;
     return line;
 }
 
@@ -87,12 +87,18 @@ void drawLine(FBUFFER fb, short x0, short y0, short x1, short y1, uint32_t rgb)
 
 void drawLineObject(FBUFFER * fb, Line line)
 {
-    drawLine((*fb), line.P1.x, line.P1.y, line.P2.x, line.P2.y, line.color);    
+    drawLine((*fb), line.P1.x, line.P1.y, line.P2.x, line.P2.y, line.color);
 }
 
 void moveLine(Line * line, short dx, short dy)
 {
-    // replace this with the implementation
+    // Agar mengikuti kartesian (y keatas makin besar)
+    dy = -dy;
+
+    (*line).P1.x += dx;
+    (*line).P2.x += dx;
+    (*line).P1.y += dy;
+    (*line).P2.y += dy;
 }
 
 void rotateLine(Line * line, short degree)
@@ -102,5 +108,38 @@ void rotateLine(Line * line, short degree)
 
 void scaleLine(Line * line, short scaleFactor)
 {
-    // replace this with the implementation
+    short x1 = (*line).P1.x;
+    short y1 = (*line).P1.y;
+    short x2 = (*line).P2.x;
+    short y2 = (*line).P2.y;
+
+    short dx = x2-x1;
+    short dy = y2-y1;
+
+    if (dx > 0){
+        x1 = -x1;
+        if (dy > 0){
+            y1 = -y1;
+        }
+    } else if (dx < 0) {
+        x2 = -x2;
+        if (dy > 0){
+            y2 = -y2;
+        }
+    } else {
+        x1 = 0;
+        x2 = 0;
+    }
+
+    if (dy == 0){
+        y1 = 0;
+        y2 = 0;
+    }
+
+    for (int i = 1; i < scaleFactor; i++){
+        (*line).P1.x += x1;
+        (*line).P2.x += x2;
+        (*line).P1.y += y1;
+        (*line).P2.y += y2;
+    }
 }
