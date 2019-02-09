@@ -108,38 +108,8 @@ void rotateLine(Line * line, short degree)
 
 void scaleLine(Line * line, short scaleFactor)
 {
-    short x1 = (*line).P1.x;
-    short y1 = (*line).P1.y;
-    short x2 = (*line).P2.x;
-    short y2 = (*line).P2.y;
-
-    short dx = x2-x1;
-    short dy = y2-y1;
-
-    if (dx > 0){
-        x1 = -x1;
-        if (dy > 0){
-            y1 = -y1;
-        }
-    } else if (dx < 0) {
-        x2 = -x2;
-        if (dy > 0){
-            y2 = -y2;
-        }
-    } else {
-        x1 = 0;
-        x2 = 0;
-    }
-
-    if (dy == 0){
-        y1 = 0;
-        y2 = 0;
-    }
-
-    for (int i = 1; i < scaleFactor; i++){
-        (*line).P1.x += x1;
-        (*line).P2.x += x2;
-        (*line).P1.y += y1;
-        (*line).P2.y += y2;
-    }
+    (*line).P1.x *= scaleFactor;
+    (*line).P2.x *= scaleFactor;
+    (*line).P1.y *= scaleFactor;
+    (*line).P2.y *= scaleFactor;
 }

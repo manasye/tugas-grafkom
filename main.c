@@ -47,7 +47,7 @@ int singleHexToInt(char n)
 
 // Moves file pointer towards end-of-line (EOL)
 // It will also stop on EOF, so check on it's return value
-int seekToEOL(FILE * file) 
+int seekToEOL(FILE * file)
 {
     char c = getc(file);
     while ((c != '\n') && (c != EOF))
@@ -58,7 +58,7 @@ int seekToEOL(FILE * file)
 }
 
 // Reads one entry of polygon
-Polygon readPolygon(FILE * file) 
+Polygon readPolygon(FILE * file)
 {
     int x, y;
     uint32_t rgb;
@@ -105,7 +105,7 @@ Polygon readPolygon(FILE * file)
 }
 
 // Reads one entry of circle
-Circle readCircle(FILE * file) 
+Circle readCircle(FILE * file)
 {
     char temp = getc(file);
     if (temp == '|') {
@@ -143,7 +143,7 @@ Circle readCircle(FILE * file)
 }
 
 // Reads one entry of line
-Line readLine(FILE * file) 
+Line readLine(FILE * file)
 {
     char temp = getc(file);
     if (temp == '|') {
@@ -183,7 +183,7 @@ Line readLine(FILE * file)
         rgb = (rgb * 16) + singleHexToInt(temp);
         temp = getc(file);
     }
-    
+
     return makeLine(x1,y1,x2,y2,rgb);
 }
 
@@ -201,7 +201,7 @@ int main()
 
     listOfPolygon = (Polygon *) malloc(sizeof(Polygon));
     numOfPolygon = 0;
-    
+
     listOfCircle = (Circle *) malloc(sizeof(Circle));
     numOfCircle = 0;
 
@@ -229,22 +229,22 @@ int main()
         {
             // Comments
             if (temp == '#') {
-                temp = seekToEOL(inputFile);  
+                temp = seekToEOL(inputFile);
             }
-            // Polygons 
+            // Polygons
             else if ((temp == 'P') || (temp == 'p')) {
                 listOfPolygon[numOfPolygon] = readPolygon(inputFile);
                 numOfPolygon++;
                 listOfPolygon = (Polygon *) realloc (listOfPolygon, (numOfPolygon + 1) * sizeof(Polygon));
                 temp = getc(inputFile);
-            } 
+            }
             // Circles
             else if ((temp == 'C') || (temp == 'c')) {
                 listOfCircle[numOfCircle] = readCircle(inputFile);
                 numOfCircle++;
                 listOfCircle = (Circle *) realloc (listOfCircle, (numOfCircle + 1) * sizeof(Circle));
                 temp = getc(inputFile);
-            } 
+            }
             // Lines
             else if ((temp == 'L') || (temp == 'l')) {
                 listOfLine[numOfLine] = readLine(inputFile);
@@ -256,7 +256,7 @@ int main()
             else {
                 temp = getc(inputFile);
             }
-            
+
         }
 
         if (temp != EOF) {
@@ -283,7 +283,7 @@ int main()
 
     // Turn the cursor back on
     system("setterm -cursor on");
-    
+
     clear(&fb);
     swapBuffer(&fb);
     destroy(&fb);
