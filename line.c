@@ -14,6 +14,17 @@ short sign(short x)
         return 0;
 }
 
+Line makeLine(short x1, short y1, short x2, short y2, uint32_t rgb)
+{
+    Line line;
+    line.P1.x = x1;
+    line.P1.y = y1;
+    line.P2.x = x2;
+    line.P2.y = y2;
+    line.color = rgb;   
+    return line;
+}
+
 void drawLine(FBUFFER fb, short x0, short y0, short x1, short y1, uint32_t rgb)
 {
     // Check delta of x and y
@@ -72,4 +83,24 @@ void drawLine(FBUFFER fb, short x0, short y0, short x1, short y1, uint32_t rgb)
             }
         }
     }
+}
+
+void drawLineObject(FBUFFER * fb, Line line)
+{
+    drawLine((*fb), line.P1.x, line.P1.y, line.P2.x, line.P2.y, line.color);    
+}
+
+void moveLine(Line * line, short dx, short dy)
+{
+    // replace this with the implementation
+}
+
+void rotateLine(Line * line, short degree)
+{
+    // replace this with the implementation
+}
+
+void scaleLine(Line * line, short scaleFactor)
+{
+    // replace this with the implementation
 }

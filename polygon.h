@@ -1,13 +1,9 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#define PI 3.14159265
+#include "point.h"
 
-typedef struct
-{
-    int x;
-    int y;
-} Point;
+#define PI 3.14159265
 
 typedef struct
 {
@@ -16,13 +12,21 @@ typedef struct
     int numOfPoint;
 } Polygon;
 
+typedef struct
+{
+    Point centerPoint;
+    short radius;
+    uint32_t color;
+} Circle;
+
+/* POLYGON FUNCTIONS */
 
 // Sets the framebuffer to draw and prepares the program to start storing control points
 void drawStart(FBUFFER *fb);
 
 // Add a control point (x,y)
 // The color rgb passed will be used for drawing the next line
-void drawAddPoint(int x, int y, uint32_t rgb);
+void drawAddPoint(short x, short y, uint32_t rgb);
 
 // Finishes the preparation and flushes the changes to framebuffer
 void drawEnd();
@@ -31,13 +35,38 @@ void drawEnd();
 void initPolygon(Polygon * poly);
 
 // Add points to Polygon
-void addPointPolygon(Polygon * poly, int x, int y, uint32_t rgb);
+void addPointPolygon(Polygon * poly, short x, short y, uint32_t rgb);
 
 // Draws a Polygon
 void drawPolygon(FBUFFER * fb, Polygon poly);
 
+/* Polygon Transformations */
+// Translation
+void movePolygon(Polygon * poly, short dx, short dy);
+
+// Rotation
+void rotatePolygon(Polygon * poly, short degree);
+
+// Scaling
+void scalePolygon(Polygon * poly, short scaleFactor);
+
+/* CIRCLE FUNCTIONS */
+
+// Initialize a Circle
+Circle makeCircle(short xc, short yc, short radius, uint32_t rgb);
+
 // Draw a circle, with center-point (xc,yc), radius r, and colored rgb
-void drawCircle(FBUFFER fb, int xc, int yc, int r, uint32_t rgb);
+void drawCircle(FBUFFER fb, short xc, short yc, short r, uint32_t rgb);
+
+// Draw a circle from Circle "object"
+void drawCircleObject(FBUFFER * fb, Circle circle);
+
+/* Circle Transformations */
+// Translation
+void moveCircle(Circle * circle, short dx, short dy);
+
+// Scaling
+void scaleCircle(Circle * circle, short scaleFactor);
 
 #include "polygon.c"
 #endif

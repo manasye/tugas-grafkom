@@ -2,6 +2,7 @@
 #define FBUFFER_H
 
 #include <stdint.h>
+#include <pthread.h>
 
 // Struct definition for FBUFFER
 typedef struct
@@ -12,6 +13,8 @@ typedef struct
     uint32_t * currentBuffer;
     int xres;
     int yres;
+    pthread_t flushThread; // DO NOT ACCESS IT DIRECTLY, EXCEPT FROM THESE FUNCTIONS BELOW
+    int firstTime;
 } FBUFFER;
 
 // YOU SHOULD ALWAYS USE THESE FUNCTIONS BELOW TO DO OPERATIONS WITH THE FRAMEBUFFER
@@ -21,12 +24,13 @@ typedef struct
 void init(FBUFFER *fb);
 
 // Write a pixel in the framebuffer
-void colorPixel(FBUFFER *fb, int x, int y, uint32_t rgb);
+// If x or y is out-of-bounds, this function will do nothing
+void colorPixel(FBUFFER *fb, short x, short y, uint32_t rgb);
 
 // Flush the framebuffer with black
 void clear(FBUFFER *fb);
 
-// Flush back buffer to frame-buffer
+// Flush current buffer to frame buffer and swaps the current buffer
 void swapBuffer(FBUFFER * fb);
 
 // Removes the shared-mapping and deallocates back-buffer

@@ -20,7 +20,7 @@ void drawStart(FBUFFER *fb)
     colorList = (uint32_t *)malloc(sizeof(uint32_t));
 }
 
-void drawAddPoint(int x, int y, uint32_t rgb)
+void drawAddPoint(short x, short y, uint32_t rgb)
 {
     numOfPoint++;
     pointList = (Point *)realloc(pointList, (numOfPoint + 1) * sizeof(Point));
@@ -54,7 +54,7 @@ void initPolygon(Polygon * poly)
     (*poly).numOfPoint = 0;
 }
 
-void addPointPolygon(Polygon * poly, int x, int y, uint32_t rgb)
+void addPointPolygon(Polygon * poly, short x, short y, uint32_t rgb)
 {
     (*poly).listOfPoint[(*poly).numOfPoint].x = x;
     (*poly).listOfPoint[(*poly).numOfPoint].y = y;
@@ -74,7 +74,34 @@ void drawPolygon(FBUFFER * fb, Polygon poly)
     drawEnd();
 }
 
-void drawOtherCirclePixels(FBUFFER fb, int xc, int yc, int x, int y, uint32_t rgb)
+void movePolygon(Polygon * poly, short dx, short dy)
+{
+    // replace this with the implementation
+}
+
+// Rotation
+void rotatePolygon(Polygon * poly, short degree)
+{
+     // replace this with the implementation
+}
+
+// Scaling
+void scalePolygon(Polygon * poly, short scaleFactor)
+{
+    // replace this with the implementation
+}
+
+Circle makeCircle(short xc, short yc, short radius, uint32_t rgb)
+{  
+    Circle circle;
+    circle.centerPoint.x = xc;
+    circle.centerPoint.y = yc;
+    circle.radius = radius;
+    circle.color = rgb;
+    return circle;
+}
+
+void drawOtherCirclePixels(FBUFFER fb, short xc, short yc, short x, short y, uint32_t rgb)
 {
     colorPixel(&fb, xc + x, yc + y, rgb);
     colorPixel(&fb, xc - x, yc + y, rgb);
@@ -88,11 +115,11 @@ void drawOtherCirclePixels(FBUFFER fb, int xc, int yc, int x, int y, uint32_t rg
 
 // Courtesy of https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 
-void drawCircle(FBUFFER fb, int xc, int yc, int r, uint32_t rgb)
+void drawCircle(FBUFFER fb, short xc, short yc, short r, uint32_t rgb)
 {
-    int x = 0;
-    int y = r;
-    int d = 3 - 2 * r;
+    short x = 0;
+    short y = r;
+    short d = 3 - 2 * r;
     drawOtherCirclePixels(fb, xc, yc, x, y, rgb);
     while (y >= x)
     {
@@ -106,4 +133,18 @@ void drawCircle(FBUFFER fb, int xc, int yc, int r, uint32_t rgb)
             d = d + 4 * x + 6;
         drawOtherCirclePixels(fb, xc, yc, x, y, rgb);
     }
+}
+
+void drawCircleObject(FBUFFER * fb, Circle circle) {
+    drawCircle((*fb), circle.centerPoint.x, circle.centerPoint.y, circle.radius, circle.color);
+}
+
+void moveCircle(Circle * circle, short dx, short dy)
+{
+    // replace this with the implementation
+}
+
+void scaleCircle(Circle * circle, short scaleFactor)
+{
+    // replace this with the implementation
 }

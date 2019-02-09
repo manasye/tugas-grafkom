@@ -47,7 +47,8 @@ int singleHexToInt(char n)
 
 // Moves file pointer towards end-of-line (EOL)
 // It will also stop on EOF, so check on it's return value
-int seekToEOL(FILE * file) {
+int seekToEOL(FILE * file) 
+{
     char c = getc(file);
     while ((c != '\n') && (c != EOF))
     {
@@ -57,7 +58,8 @@ int seekToEOL(FILE * file) {
 }
 
 // Reads one entry of polygon
-Polygon readPolygon(FILE * file, FBUFFER * fb) {
+Polygon readPolygon(FILE * file) 
+{
     int x, y;
     uint32_t rgb;
     Polygon poly;
@@ -103,7 +105,8 @@ Polygon readPolygon(FILE * file, FBUFFER * fb) {
 }
 
 // Reads one entry of circle
-int readCircle(FILE * file, FBUFFER * fb) {
+Circle readCircle(FILE * file) 
+{
     char temp = getc(file);
     if (temp == '|') {
         temp = getc(file);
@@ -135,14 +138,13 @@ int readCircle(FILE * file, FBUFFER * fb) {
         rgb = (rgb * 16) + singleHexToInt(temp);
         temp = getc(file);
     }
-    // Draw the circle
-    drawCircle(*fb,xc,yc,r,rgb);
 
-    return 0;
+    return makeCircle(xc,yc,r,rgb);
 }
 
 // Reads one entry of line
-int readLine(FILE * file, FBUFFER * fb) {
+Line readLine(FILE * file) 
+{
     char temp = getc(file);
     if (temp == '|') {
         temp = getc(file);
@@ -181,9 +183,8 @@ int readLine(FILE * file, FBUFFER * fb) {
         rgb = (rgb * 16) + singleHexToInt(temp);
         temp = getc(file);
     }
-    // Draw the line
-    drawLine(*fb,x1,y1,x2,y2,rgb);
-    return 0;
+    
+    return makeLine(x1,y1,x2,y2,rgb);
 }
 
 
@@ -192,12 +193,20 @@ int main()
     char temp;
     FBUFFER fb;
     char intBuffer[5];
-    int curX0, curY0, curX1, curY1, numOfPolygon;
+    int curX0, curY0, curX1, curY1, numOfPolygon, numOfCircle, numOfLine;
     Polygon * listOfPolygon;
+    Circle * listOfCircle;
+    Line * listOfLine;
     uint32_t rgb;
 
     listOfPolygon = (Polygon *) malloc(sizeof(Polygon));
     numOfPolygon = 0;
+    
+    listOfCircle = (Circle *) malloc(sizeof(Circle));
+    numOfCircle = 0;
+
+    listOfLine = (Line *) malloc(sizeof(Line));
+    numOfLine = 0;
 
     init(&fb);
 
@@ -224,19 +233,23 @@ int main()
             }
             // Polygons 
             else if ((temp == 'P') || (temp == 'p')) {
-                listOfPolygon[numOfPolygon] = readPolygon(inputFile,&fb);
+                listOfPolygon[numOfPolygon] = readPolygon(inputFile);
                 numOfPolygon++;
                 listOfPolygon = (Polygon *) realloc (listOfPolygon, (numOfPolygon + 1) * sizeof(Polygon));
                 temp = getc(inputFile);
             } 
             // Circles
             else if ((temp == 'C') || (temp == 'c')) {
-                readCircle(inputFile,&fb);
+                listOfCircle[numOfCircle] = readCircle(inputFile);
+                numOfCircle++;
+                listOfCircle = (Circle *) realloc (listOfCircle, (numOfCircle + 1) * sizeof(Circle));
                 temp = getc(inputFile);
             } 
             // Lines
             else if ((temp == 'L') || (temp == 'l')) {
-                readLine(inputFile, &fb);
+                listOfLine[numOfLine] = readLine(inputFile);
+                numOfLine++;
+                listOfLine = (Line *) realloc (listOfLine, (numOfLine + 1) * sizeof(Line));
                 temp = getc(inputFile);
             }
             // Other, just advance the file pointer
@@ -252,21 +265,28 @@ int main()
     }
     fclose(inputFile);
 
+    // Draw all Polygon, Circle, and Line
     int i;
     for (i = 0; i < numOfPolygon; i++) {
         drawPolygon(&fb,listOfPolygon[i]);
     }
-
+    for (i = 0; i < numOfCircle; i++) {
+        drawCircleObject(&fb,listOfCircle[i]);
+    }
+    for (i = 0; i < numOfLine; i++) {
+        drawLineObject(&fb,listOfLine[i]);
+    }
     swapBuffer(&fb);
 
     // Pause
     scanf("%c", &temp);
 
+    // Turn the cursor back on
+    system("setterm -cursor on");
+    
     clear(&fb);
     swapBuffer(&fb);
     destroy(&fb);
 
-    // Turn the cursor back on
-    system("setterm -cursor on");
     return 0;
 }
