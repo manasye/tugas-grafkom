@@ -60,7 +60,7 @@ void addPointPolygon(Polygon * poly, short x, short y, uint32_t rgb)
     (*poly).listOfPoint[(*poly).numOfPoint].y = y;
     (*poly).listOfColors[(*poly).numOfPoint] = rgb;
     (*poly).listOfPoint = (Point *) realloc((*poly).listOfPoint, ((*poly).numOfPoint + 2) * sizeof(Point));
-    (*poly).listOfColors = (uint32_t *) realloc((*poly).listOfColors, ((*poly).numOfPoint + 2) * sizeof(uint32_t)); 
+    (*poly).listOfColors = (uint32_t *) realloc((*poly).listOfColors, ((*poly).numOfPoint + 2) * sizeof(uint32_t));
     (*poly).numOfPoint++;
 }
 
@@ -76,7 +76,17 @@ void drawPolygon(FBUFFER * fb, Polygon poly)
 
 void movePolygon(Polygon * poly, short dx, short dy)
 {
-    // replace this with the implementation
+    int n = (*poly).numOfPoint;
+    for (int i = 0; i < n; i+=2){
+        Point P1 = (*poly).listOfPoint[i];
+        Point P2 = (*poly).listOfPoint[i+1];
+
+        Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[i]);
+        moveLine(&line, dx, dy);
+
+        (*poly).listOfPoint[i] = line.P1;
+        (*poly).listOfPoint[i+1] = line.P2;
+    }
 }
 
 // Rotation
@@ -88,11 +98,21 @@ void rotatePolygon(Polygon * poly, short degree)
 // Scaling
 void scalePolygon(Polygon * poly, short scaleFactor)
 {
-    // replace this with the implementation
+    int n = (*poly).numOfPoint;
+    for (int i = 0; i < n; i+=2){
+        Point P1 = (*poly).listOfPoint[i];
+        Point P2 = (*poly).listOfPoint[i+1];
+
+        Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[i]);
+        scaleLine(&line, scaleFactor);
+
+        (*poly).listOfPoint[i] = line.P1;
+        (*poly).listOfPoint[i+1] = line.P2;
+    }
 }
 
 Circle makeCircle(short xc, short yc, short radius, uint32_t rgb)
-{  
+{
     Circle circle;
     circle.centerPoint.x = xc;
     circle.centerPoint.y = yc;
@@ -141,7 +161,8 @@ void drawCircleObject(FBUFFER * fb, Circle circle) {
 
 void moveCircle(Circle * circle, short dx, short dy)
 {
-    // replace this with the implementation
+    (*circle).centerPoint.x += dx;
+    (*circle).centerPoint.y += dy;
 }
 
 void scaleCircle(Circle * circle, short scaleFactor)
