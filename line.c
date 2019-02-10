@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
+#define PI 3.14
 
 short sign(short x)
 {
@@ -101,12 +104,25 @@ void moveLine(Line * line, short dx, short dy)
     (*line).P2.y += dy;
 }
 
-void rotateLine(Line * line, short degree)
+// https://www.tutorialspoint.com/computer_graphics/2d_transformation.htm
+void rotateLine(Line * line, float degree)
 {
-    // replace this with the implementation
+    float rad = (degree/180) * PI;
+    float costheta = cos(rad);
+    float sintheta = sin(rad);
+
+    short xcenter = (*line).P1.x;
+    short ycenter = (*line).P1.y;
+    short x2 = (*line).P2.x;
+    short y2 = (*line).P2.y;
+
+    short deltax2 = x2 - xcenter;
+    short deltay2 = y2 - ycenter;
+    (*line).P2.x = xcenter + (deltax2 * costheta - deltay2 * sintheta);
+    (*line).P2.y = ycenter + (deltax2 * sintheta + deltay2 * costheta);
 }
 
-void scaleLine(Line * line, short scaleFactor)
+void scaleLine(Line * line, float scaleFactor)
 {
     (*line).P1.x *= scaleFactor;
     (*line).P2.x *= scaleFactor;

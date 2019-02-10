@@ -32,10 +32,10 @@ void drawLineObject(FBUFFER * fb, Line line);
 void moveLine(Line * line, short dx, short dy);
 
 // Rotation
-void rotateLine(Line * line, short degree);
+void rotateLine(Line * line, float degree);
 
 // Scaling
-void scaleLine(Line * line, short scaleFactor);
+void scaleLine(Line * line, float scaleFactor);
 
 #include "line.c"
 

@@ -90,13 +90,44 @@ void movePolygon(Polygon * poly, short dx, short dy)
 }
 
 // Rotation
-void rotatePolygon(Polygon * poly, short degree)
+void rotatePolygon(Polygon * poly, float degree)
 {
-     // replace this with the implementation
+    int n = (*poly).numOfPoint;
+    short tempx;
+    short tempy;
+
+    int odd = n % 2 == 1 ? 1 : 2;
+    Point P1;
+    Point P2;
+
+    for (int i = 0; i < n-odd; i++){
+        P1 = (*poly).listOfPoint[i];
+        P2 = (*poly).listOfPoint[i+1];
+
+        if (i > 0){
+            P2.x += tempx;
+            P2.y += tempy;
+        }
+
+        Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[i]);
+        rotateLine(&line, degree);
+
+        tempx = line.P2.x - P2.x;
+        tempy = line.P2.y - P2.y;
+        (*poly).listOfPoint[i+1] = line.P2;
+    }
+
+    P1 = (*poly).listOfPoint[0];
+    P2 = (*poly).listOfPoint[n-1];
+
+    Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[n-1]);
+    rotateLine(&line, degree);
+
+    (*poly).listOfPoint[n-1] = line.P2;
 }
 
 // Scaling
-void scalePolygon(Polygon * poly, short scaleFactor)
+void scalePolygon(Polygon * poly, float scaleFactor)
 {
     int n = (*poly).numOfPoint;
     for (int i = 0; i < n; i+=2){

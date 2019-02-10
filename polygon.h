@@ -3,8 +3,6 @@
 
 #include "point.h"
 
-#define PI 3.14159265
-
 typedef struct
 {
     Point * listOfPoint;
@@ -45,10 +43,10 @@ void drawPolygon(FBUFFER * fb, Polygon poly);
 void movePolygon(Polygon * poly, short dx, short dy);
 
 // Rotation
-void rotatePolygon(Polygon * poly, short degree);
+void rotatePolygon(Polygon * poly, float degree);
 
 // Scaling
-void scalePolygon(Polygon * poly, short scaleFactor);
+void scalePolygon(Polygon * poly, float scaleFactor);
 
 /* CIRCLE FUNCTIONS */
 
