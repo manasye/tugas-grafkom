@@ -5,8 +5,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 #define FILENAME "test.txt"
+
+// https://www.geeksforgeeks.org/time-delay-c/
+void delay(int ms)
+{
+    // Stroing start time
+    clock_t start_time = clock();
+    long micro = ms * 1000;
+
+    // looping till required time is not acheived
+    while (clock() < start_time + micro)
+        ;
+}
 
 int charToInt(char n)
 {
@@ -189,21 +202,48 @@ Line readLine(FILE * file)
 
 void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
 {
-    drawPolygon(fb, listOfPolygon[0]);
-    movePolygon(&listOfPolygon[0],200,0);
-    rotatePolygon(&listOfPolygon[0],90);
-    drawPolygon(fb, listOfPolygon[0]);
+    int tankSpeed = 20;
+    while (1) {
+        // Tank 1 -> Polygon 1 - 3, Circle 1 - 4, Line 1-5
+        for (int i = 0; i < 3; i++){
+            drawPolygon(fb, listOfPolygon[i]);
+            drawCircleObject(fb, listOfCircle[i]);
+        }
+
+        swapBuffer(fb);
+
+        for (int i = 0; i < 3; i++){
+            movePolygon(&listOfPolygon[i], tankSpeed, 0);
+            moveCircle(&listOfCircle[i], tankSpeed, 0);
+        }
+
+        delay(200);
+    };
+}
+
+void draw(FBUFFER *fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
+{
+    int i;
+    for (i = 0; i < numOfPolygon; i++) {
+        drawPolygon(fb,listOfPolygon[i]);
+    }
+    for (i = 0; i < numOfCircle; i++) {
+        drawCircleObject(fb,listOfCircle[i]);
+    }
+    for (i = 0; i < numOfLine; i++) {
+        drawLineObject(fb,listOfLine[i]);
+    }
+    swapBuffer(fb);
 }
 
 int main()
 {
     char temp;
     FBUFFER fb;
-    char intBuffer[5];
-    int curX0, curY0, curX1, curY1, numOfPolygon, numOfCircle, numOfLine;
     Polygon * listOfPolygon;
     Circle * listOfCircle;
     Line * listOfLine;
+    int numOfPolygon, numOfCircle, numOfLine;
     uint32_t rgb;
 
     listOfPolygon = (Polygon *) malloc(sizeof(Polygon));
@@ -273,20 +313,9 @@ int main()
     fclose(inputFile);
 
     // Draw all Polygon, Circle, and Line
-    int i;
-    for (i = 0; i < numOfPolygon; i++) {
-        drawPolygon(&fb,listOfPolygon[i]);
-    }
-    for (i = 0; i < numOfCircle; i++) {
-        drawCircleObject(&fb,listOfCircle[i]);
-    }
-    for (i = 0; i < numOfLine; i++) {
-        drawLineObject(&fb,listOfLine[i]);
-    }
-    swapBuffer(&fb);
+    // draw(&fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
     animateAllObject(&fb, listOfLine, listOfCircle, listOfPolygon);
-    swapBuffer(&fb);
 
     // Pause
     scanf("%c", &temp);
