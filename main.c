@@ -202,22 +202,60 @@ Line readLine(FILE * file)
 
 void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
 {
-    int tankSpeed = 20;
-    while (1) {
+    int tankSpeed = 5;
+    int planeSpeed = 10;
+    int bulletSpeed = 25;
+    int frames = 200;
+    int bulletDelay1 = 25;
+    int bulletDelay2 = 5;
+    while (frames > 0) {
         // Tank 1 -> Polygon 1 - 3, Circle 1 - 4, Line 1-5
         for (int i = 0; i < 3; i++){
             drawPolygon(fb, listOfPolygon[i]);
             drawCircleObject(fb, listOfCircle[i]);
         }
+        // Plane -> Polygon 7 - 11; Bullet -> Circle 9, Line 11 - 13
+        for (int i = 6; i < 11; i++) {
+            drawPolygon(fb, listOfPolygon[i]);
+        }
+        // Bullet delay for tank
+        if (bulletDelay1 <= 0) {
+            drawCircleObject(fb, listOfCircle[3]);
+        } else {
+            bulletDelay1--;
+        }
+        // Bullet delay for plane
+        if (bulletDelay2 <= 0) {
+            drawCircleObject(fb, listOfCircle[8]);
+        } else {
+            bulletDelay2--;
+        }
 
+        delay(33);
         swapBuffer(fb);
 
+        // Move tank
         for (int i = 0; i < 3; i++){
             movePolygon(&listOfPolygon[i], tankSpeed, 0);
             moveCircle(&listOfCircle[i], tankSpeed, 0);
         }
-
-        delay(200);
+        // Move plane
+        for (int i = 6; i < 11; i++) {
+            movePolygon(&listOfPolygon[i], -planeSpeed, 0);
+        }
+        // Move tank bullet
+        if (bulletDelay1 <= 0) {
+            moveCircle(&listOfCircle[3], bulletSpeed, 0);
+        } else {
+            moveCircle(&listOfCircle[3], tankSpeed, 0);
+        }
+        // Move plane bullet
+        if (bulletDelay2 <= 0) {
+            moveCircle(&listOfCircle[8], 0, bulletSpeed);
+        } else {
+            moveCircle(&listOfCircle[8], -planeSpeed, 0);
+        }
+        frames--;
     };
 }
 
@@ -318,7 +356,7 @@ int main()
     animateAllObject(&fb, listOfLine, listOfCircle, listOfPolygon);
 
     // Pause
-    scanf("%c", &temp);
+    //scanf("%c", &temp);
 
     // Turn the cursor back on
     system("setterm -cursor on");
