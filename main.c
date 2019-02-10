@@ -187,13 +187,13 @@ Line readLine(FILE * file)
     return makeLine(x1,y1,x2,y2,rgb);
 }
 
-// void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
-// {
-//     drawPolygon(fb, listOfPolygon[0]);
-//     movePolygon(&listOfPolygon[0],200,0);
-//     rotatePolygon(&listOfPolygon[0],48);
-//     drawPolygon(fb, listOfPolygon[0]);
-// }
+void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
+{
+    drawPolygon(fb, listOfPolygon[0]);
+    movePolygon(&listOfPolygon[0],200,0);
+    rotatePolygon(&listOfPolygon[0],90);
+    drawPolygon(fb, listOfPolygon[0]);
+}
 
 int main()
 {
@@ -285,8 +285,8 @@ int main()
     }
     swapBuffer(&fb);
 
-    // animateAllObject(&fb, listOfLine, listOfCircle, listOfPolygon);
-    // swapBuffer(&fb);
+    animateAllObject(&fb, listOfLine, listOfCircle, listOfPolygon);
+    swapBuffer(&fb);
 
     // Pause
     scanf("%c", &temp);

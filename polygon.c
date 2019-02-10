@@ -93,14 +93,15 @@ void movePolygon(Polygon * poly, short dx, short dy)
 void rotatePolygon(Polygon * poly, float degree)
 {
     int n = (*poly).numOfPoint;
-    short tempx;
-    short tempy;
+    short tempx = 0;
+    short tempy = 0;
 
-    int odd = n % 2 == 1 ? 1 : 2;
+    int isOdd = n % 2 == 1;
+    int adjust = isOdd ? 1 : 2;
     Point P1;
     Point P2;
 
-    for (int i = 0; i < n-odd; i++){
+    for (int i = 0; i < n-adjust; i++){
         P1 = (*poly).listOfPoint[i];
         P2 = (*poly).listOfPoint[i+1];
 
@@ -112,24 +113,31 @@ void rotatePolygon(Polygon * poly, float degree)
         Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[i]);
         rotateLine(&line, degree);
 
-        tempx = line.P2.x - P2.x;
-        tempy = line.P2.y - P2.y;
+        if (isOdd){
+            tempx += line.P2.x - P2.x;
+            tempy += line.P2.y - P2.y;
+        } else {
+            tempx = line.P2.x - P2.x;
+            tempy = line.P2.y - P2.y;
+        }
         (*poly).listOfPoint[i+1] = line.P2;
     }
 
-    P1 = (*poly).listOfPoint[0];
-    P2 = (*poly).listOfPoint[n-1];
+    if (!isOdd){
+        P1 = (*poly).listOfPoint[0];
+        P2 = (*poly).listOfPoint[n-1];
 
-    Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[n-1]);
-    rotateLine(&line, degree);
+        Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[n-1]);
+        rotateLine(&line, degree);
 
-    (*poly).listOfPoint[n-1] = line.P2;
+        (*poly).listOfPoint[n-1] = line.P2;
+    }
 }
 
 // Scaling
 void scalePolygonAtAnchor(Polygon * poly, float scaleFactor, short ax, short ay)
 {
-    for (int i = 0; i < (*poly).numOfPoint; i++) 
+    for (int i = 0; i < (*poly).numOfPoint; i++)
     {
         int dx = ax - (*poly).listOfPoint[i].x;
         int dy = ay - (*poly).listOfPoint[i].y;
@@ -141,11 +149,11 @@ void scalePolygonAtAnchor(Polygon * poly, float scaleFactor, short ax, short ay)
 }
 
 void scalePolygon(Polygon * poly, float scaleFactor)
-{   
+{
     // Find centroid
     int xc = 0;
     int yc = 0;
-    for (int i = 0; i < (*poly).numOfPoint; i++) 
+    for (int i = 0; i < (*poly).numOfPoint; i++)
     {
         xc += (*poly).listOfPoint[i].x;
         yc += (*poly).listOfPoint[i].y;
@@ -156,7 +164,7 @@ void scalePolygon(Polygon * poly, float scaleFactor)
     // Scale based on centroid
     scalePolygonAtAnchor(poly, scaleFactor, xc, yc);
 }
-    
+
 Circle makeCircle(short xc, short yc, short radius, uint32_t rgb)
 {
     Circle circle;
@@ -201,7 +209,7 @@ void drawCircle(FBUFFER fb, short xc, short yc, short r, uint32_t rgb)
     }
 }
 
-void drawCircleObject(FBUFFER * fb, Circle circle) 
+void drawCircleObject(FBUFFER * fb, Circle circle)
 {
     drawCircle((*fb), circle.centerPoint.x, circle.centerPoint.y, circle.radius, circle.color);
 }
