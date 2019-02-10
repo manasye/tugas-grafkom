@@ -119,26 +119,31 @@ void rotateLine(Line * line, float degree)
     (*line).P2.y = ycenter + ((deltax2 * sintheta) + (deltay2 * costheta));
 }
 
+void scaleLineAtAnchor(Line * line, float scaleFactor, short ax, short ay)
+{
+    // Scale based on that anchor point
+    short dx, dy;
+    // Point #1
+    dx = ax - (*line).P1.x;
+    dy = ay - (*line).P1.y;
+    dx *= scaleFactor;
+    dy *= scaleFactor;
+    (*line).P1.x = ax - dx;
+    (*line).P1.y = ay - dy;
+    // Point #2
+    dx = ax - (*line).P2.x;
+    dy = ay - (*line).P2.y;
+    dx *= scaleFactor;
+    dy *= scaleFactor;
+    (*line).P2.x = ax - dx;
+    (*line).P2.y = ay - dy;
+}
+
 void scaleLine(Line * line, float scaleFactor)
 {
     // Find the center-point of the line
     short xc = (((*line).P1.x) + ((*line).P2.x)) / 2;
     short yc = (((*line).P1.y) + ((*line).P2.y)) / 2;
 
-    // Scale based on that center point
-    short dx, dy;
-    // Point #1
-    dx = xc - (*line).P1.x;
-    dy = yc - (*line).P1.y;
-    dx *= scaleFactor;
-    dy *= scaleFactor;
-    (*line).P1.x = xc - dx;
-    (*line).P1.y = yc - dy;
-    // Point #2
-    dx = xc - (*line).P2.x;
-    dy = yc - (*line).P2.y;
-    dx *= scaleFactor;
-    dy *= scaleFactor;
-    (*line).P2.x = xc - dx;
-    (*line).P2.y = yc - dy;
+    scaleLineAtAnchor(line, scaleFactor, xc, yc);
 }

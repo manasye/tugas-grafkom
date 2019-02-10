@@ -35,6 +35,8 @@ void moveLine(Line * line, short dx, short dy);
 void rotateLine(Line * line, float degree);
 
 // Scaling
+void scaleLineAtAnchor(Line * line, float scaleFactor, short ax, short ay);
+
 void scaleLine(Line * line, float scaleFactor);
 
 #include "line.c"

@@ -202,13 +202,15 @@ Line readLine(FILE * file)
 
 void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
 {
+    //char temp;
     int tankSpeed = 5;
     int planeSpeed = 10;
     int bulletSpeed = 25;
     int frames = 200;
     int bulletDelay1 = 25;
     int bulletDelay2 = 5;
-    while (frames > 0) {
+    int frameCounter;
+    for (frameCounter = 0; frameCounter < frames; frameCounter++) {
         // Tank 1 -> Polygon 1 - 3, Circle 1 - 4, Line 1-5
         for (int i = 0; i < 3; i++){
             drawPolygon(fb, listOfPolygon[i]);
@@ -218,21 +220,23 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
         for (int i = 6; i < 11; i++) {
             drawPolygon(fb, listOfPolygon[i]);
         }
-        // Bullet delay for tank
-        if (bulletDelay1 <= 0) {
+        // Draw tank's bullet when it's time
+        if ((frameCounter >= 49) && (frameCounter <= 99)) {
             drawCircleObject(fb, listOfCircle[3]);
-        } else {
-            bulletDelay1--;
-        }
-        // Bullet delay for plane
-        if (bulletDelay2 <= 0) {
+            if (frameCounter <= 60) {
+                for (int i = 0;i < 3;i++) {
+                    drawLineObject(fb,listOfLine[i]);
+                }
+            }
+        } 
+        // Draw plane's bullet when it's time
+        if ((frameCounter >= 5) && (frameCounter <= 25)) {
             drawCircleObject(fb, listOfCircle[8]);
-        } else {
-            bulletDelay2--;
         }
 
         delay(33);
         swapBuffer(fb);
+        //scanf("%c",&temp);
 
         // Move tank
         for (int i = 0; i < 3; i++){
@@ -243,20 +247,50 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
         for (int i = 6; i < 11; i++) {
             movePolygon(&listOfPolygon[i], -planeSpeed, 0);
         }
-        // Move tank bullet
-        if (bulletDelay1 <= 0) {
+        // Move tank bullet (when it's time)
+        if ((frameCounter >= 49) && (frameCounter < 99)) {
             moveCircle(&listOfCircle[3], bulletSpeed, 0);
-        } else {
-            moveCircle(&listOfCircle[3], tankSpeed, 0);
+            // Blast effect
+            switch (frameCounter) {
+                case 49:
+                    for (int i = 0;i < 3;i++) {
+                        scaleLineAtAnchor(&listOfLine[i],0.1,listOfLine[i].P1.x, listOfLine[i].P1.y);
+                    }
+                    break;
+                case 50:
+                case 51:
+                case 52:
+                case 53:
+                case 54:
+                    for (int i = 0;i < 3;i++) {
+                        scaleLineAtAnchor(&listOfLine[i],2,listOfLine[i].P1.x, listOfLine[i].P1.y);
+                    }
+                    break;
+                case 55:
+                case 56:
+                case 57:
+                case 58:
+                case 59:
+                    for (int i = 0;i < 3;i++) {
+                        scaleLineAtAnchor(&listOfLine[i],0.5,listOfLine[i].P2.x, listOfLine[i].P2.y);
+                    }
+                    break;
+            }
+        } else if (frameCounter < 47) {
+            for (int i = 0; i < 3;i++) {
+                moveLine(&listOfLine[i],tankSpeed,0);
+            }
+            if (frameCounter < 29) {
+                moveCircle(&listOfCircle[3], tankSpeed, 0);
+            }
         }
-        // Move plane bullet
-        if (bulletDelay2 <= 0) {
+        // Move plane bullet (when it's time)
+        if ((frameCounter >= 5) && (frameCounter <= 25)) {
             moveCircle(&listOfCircle[8], 0, bulletSpeed);
-        } else {
+        } else if (frameCounter < 5) {
             moveCircle(&listOfCircle[8], -planeSpeed, 0);
         }
-        frames--;
-    };
+    }
 }
 
 void draw(FBUFFER *fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
