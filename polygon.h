@@ -46,6 +46,10 @@ void movePolygon(Polygon * poly, short dx, short dy);
 void rotatePolygon(Polygon * poly, float degree);
 
 // Scaling
+// This one will scale the polygon based on an anchor point (ax, ay)
+void scalePolygonAtAnchor(Polygon * poly, float scaleFactor, short ax, short ay);
+
+// This one will scale the polygon from it's centroid
 void scalePolygon(Polygon * poly, float scaleFactor);
 
 /* CIRCLE FUNCTIONS */

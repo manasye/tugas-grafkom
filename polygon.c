@@ -127,21 +127,36 @@ void rotatePolygon(Polygon * poly, float degree)
 }
 
 // Scaling
-void scalePolygon(Polygon * poly, float scaleFactor)
+void scalePolygonAtAnchor(Polygon * poly, float scaleFactor, short ax, short ay)
 {
-    int n = (*poly).numOfPoint;
-    for (int i = 0; i < n; i+=2){
-        Point P1 = (*poly).listOfPoint[i];
-        Point P2 = (*poly).listOfPoint[i+1];
-
-        Line line = makeLine(P1.x, P1.y, P2.x, P2.y, (*poly).listOfColors[i]);
-        scaleLine(&line, scaleFactor);
-
-        (*poly).listOfPoint[i] = line.P1;
-        (*poly).listOfPoint[i+1] = line.P2;
+    for (int i = 0; i < (*poly).numOfPoint; i++) 
+    {
+        int dx = ax - (*poly).listOfPoint[i].x;
+        int dy = ay - (*poly).listOfPoint[i].y;
+        dx *= scaleFactor;
+        dy *= scaleFactor;
+        (*poly).listOfPoint[i].x = ax - dx;
+        (*poly).listOfPoint[i].y = ay - dy;
     }
 }
 
+void scalePolygon(Polygon * poly, float scaleFactor)
+{   
+    // Find centroid
+    int xc = 0;
+    int yc = 0;
+    for (int i = 0; i < (*poly).numOfPoint; i++) 
+    {
+        xc += (*poly).listOfPoint[i].x;
+        yc += (*poly).listOfPoint[i].y;
+    }
+    xc = xc / (*poly).numOfPoint;
+    yc = yc / (*poly).numOfPoint;
+
+    // Scale based on centroid
+    scalePolygonAtAnchor(poly, scaleFactor, xc, yc);
+}
+    
 Circle makeCircle(short xc, short yc, short radius, uint32_t rgb)
 {
     Circle circle;

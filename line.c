@@ -121,8 +121,24 @@ void rotateLine(Line * line, float degree)
 
 void scaleLine(Line * line, float scaleFactor)
 {
-    (*line).P1.x *= scaleFactor;
-    (*line).P2.x *= scaleFactor;
-    (*line).P1.y *= scaleFactor;
-    (*line).P2.y *= scaleFactor;
+    // Find the center-point of the line
+    short xc = (((*line).P1.x) + ((*line).P2.x)) / 2;
+    short yc = (((*line).P1.y) + ((*line).P2.y)) / 2;
+
+    // Scale based on that center point
+    short dx, dy;
+    // Point #1
+    dx = xc - (*line).P1.x;
+    dy = yc - (*line).P1.y;
+    dx *= scaleFactor;
+    dy *= scaleFactor;
+    (*line).P1.x = xc - dx;
+    (*line).P1.y = yc - dy;
+    // Point #2
+    dx = xc - (*line).P2.x;
+    dy = yc - (*line).P2.y;
+    dx *= scaleFactor;
+    dy *= scaleFactor;
+    (*line).P2.x = xc - dx;
+    (*line).P2.y = yc - dy;
 }
