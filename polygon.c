@@ -186,7 +186,8 @@ void drawCircle(FBUFFER fb, short xc, short yc, short r, uint32_t rgb)
     }
 }
 
-void drawCircleObject(FBUFFER * fb, Circle circle) {
+void drawCircleObject(FBUFFER * fb, Circle circle) 
+{
     drawCircle((*fb), circle.centerPoint.x, circle.centerPoint.y, circle.radius, circle.color);
 }
 
@@ -196,7 +197,7 @@ void moveCircle(Circle * circle, short dx, short dy)
     (*circle).centerPoint.y += dy;
 }
 
-void scaleCircle(Circle * circle, short scaleFactor)
+void scaleCircle(Circle * circle, float scaleFactor)
 {
-    // replace this with the implementation
+    (*circle).radius *= scaleFactor;
 }

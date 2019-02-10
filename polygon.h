@@ -64,7 +64,7 @@ void drawCircleObject(FBUFFER * fb, Circle circle);
 void moveCircle(Circle * circle, short dx, short dy);
 
 // Scaling
-void scaleCircle(Circle * circle, short scaleFactor);
+void scaleCircle(Circle * circle, float scaleFactor);
 
 #include "polygon.c"
 #endif

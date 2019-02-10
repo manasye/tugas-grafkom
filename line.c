@@ -95,9 +95,6 @@ void drawLineObject(FBUFFER * fb, Line line)
 
 void moveLine(Line * line, short dx, short dy)
 {
-    // Agar mengikuti kartesian (y keatas makin besar)
-    dy = -dy;
-
     (*line).P1.x += dx;
     (*line).P2.x += dx;
     (*line).P1.y += dy;
@@ -118,8 +115,8 @@ void rotateLine(Line * line, float degree)
 
     short deltax2 = x2 - xcenter;
     short deltay2 = y2 - ycenter;
-    (*line).P2.x = xcenter + (deltax2 * costheta - deltay2 * sintheta);
-    (*line).P2.y = ycenter + (deltax2 * sintheta + deltay2 * costheta);
+    (*line).P2.x = xcenter + ((deltax2 * costheta) - (deltay2 * sintheta));
+    (*line).P2.y = ycenter + ((deltax2 * sintheta) + (deltay2 * costheta));
 }
 
 void scaleLine(Line * line, float scaleFactor)
