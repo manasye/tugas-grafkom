@@ -1,5 +1,5 @@
 #include "framebuffer.hpp"
-//#include "line.h"
+#include "line.hpp"
 //#include "polygon.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -406,7 +406,16 @@ int main()
     for (int i = 0; i < 200; i++) {
         fb.setPixel(200 + i,200, WHITE);
     }
+    Line tempLine (500,400,100,20,WHITE);
+    tempLine.draw(&fb);
     fb.swapBuffer();
+
+    for (int i = 0; i < 100; i++) {
+        tempLine.move(2,2);
+        tempLine.scaleLine(0.9999);
+        tempLine.draw(&fb);
+        fb.swapBuffer();
+    }
 
     // Pause
     scanf("%c", &temp);
