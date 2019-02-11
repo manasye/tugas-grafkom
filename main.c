@@ -210,6 +210,10 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
     int bulletDelay1 = 25;
     int bulletDelay2 = 5;
     int frameCounter;
+    float angle = -1;
+    float tempAngle = 0;
+    int airPlaneSpeedY = 10;
+    const int MAXANGLE = 5;
     for (frameCounter = 0; frameCounter < frames; frameCounter++) {
         // Tank 1 -> Polygon 1 - 3, Circle 1 - 4, Line 1-5
         for (int i = 0; i < 3; i++){
@@ -220,6 +224,11 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
         for (int i = 6; i < 11; i++) {
             drawPolygon(fb, listOfPolygon[i]);
         }
+        tempAngle += angle;
+        if (tempAngle < -MAXANGLE){
+            angle = 0;
+            airPlaneSpeedY = 0;
+        }
         // Draw tank's bullet when it's time
         if ((frameCounter >= 49) && (frameCounter <= 99)) {
             drawCircleObject(fb, listOfCircle[3]);
@@ -228,7 +237,7 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
                     drawLineObject(fb,listOfLine[i]);
                 }
             }
-        } 
+        }
         // Draw plane's bullet when it's time
         if ((frameCounter >= 5) && (frameCounter <= 25)) {
             drawCircleObject(fb, listOfCircle[8]);
@@ -245,7 +254,8 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
         }
         // Move plane
         for (int i = 6; i < 11; i++) {
-            movePolygon(&listOfPolygon[i], -planeSpeed, 0);
+            rotatePolygon(&listOfPolygon[i], angle);
+            movePolygon(&listOfPolygon[i], -planeSpeed, airPlaneSpeedY);
         }
         // Move tank bullet (when it's time)
         if ((frameCounter >= 49) && (frameCounter < 99)) {
