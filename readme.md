@@ -1,3 +1,3 @@
-## Compile with <math.h> and <pthread.h>
+## Compile with <math.h> and <thread>
 
-1. Open terminal, type `gcc main.c -lm -pthread`
+1. Open terminal, type `g++ main.c -lm -pthread`

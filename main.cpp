@@ -1,6 +1,6 @@
-#include "framebuffer.h"
-#include "line.h"
-#include "polygon.h"
+#include "framebuffer.hpp"
+//#include "line.h"
+//#include "polygon.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -69,7 +69,7 @@ int seekToEOL(FILE * file)
     }
     return c;
 }
-
+/*
 // Reads one entry of polygon
 Polygon readPolygon(FILE * file)
 {
@@ -318,10 +318,13 @@ void draw(FBUFFER *fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPo
     swapBuffer(fb);
 }
 
+*/
+
 int main()
 {
     char temp;
-    FBUFFER fb;
+    Framebuffer fb;
+    /*
     Polygon * listOfPolygon;
     Circle * listOfCircle;
     Line * listOfLine;
@@ -336,18 +339,18 @@ int main()
 
     listOfLine = (Line *) malloc(sizeof(Line));
     numOfLine = 0;
+    */
 
-    init(&fb);
-
-    printf("Width : %d\nHeight : %d\n", fb.xres, fb.yres);
+    printf("Width : %d\nHeight : %d\n", fb.getXRes(), fb.getYRes());
     scanf("%c", &temp);
 
     // Turn off the cursor
     system("setterm -cursor off");
 
-    clear(&fb);
-    swapBuffer(&fb);
-
+    fb.clear();
+    fb.swapBuffer();
+    
+    /*
     // Open file
     FILE *inputFile = fopen(FILENAME, "r");
     temp = getc(inputFile);
@@ -398,16 +401,21 @@ int main()
     // draw(&fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
     animateAllObject(&fb, listOfLine, listOfCircle, listOfPolygon);
+    */
+
+    for (int i = 0; i < 200; i++) {
+        fb.setPixel(200 + i,200, WHITE);
+    }
+    fb.swapBuffer();
 
     // Pause
-    //scanf("%c", &temp);
+    scanf("%c", &temp);
 
     // Turn the cursor back on
     system("setterm -cursor on");
 
-    clear(&fb);
-    swapBuffer(&fb);
-    destroy(&fb);
+    fb.clear();
+    fb.swapBuffer();
 
     return 0;
 }
