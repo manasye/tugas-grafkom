@@ -1,6 +1,6 @@
-#include "framebuffer.h"
-#include "line.h"
-#include "polygon.h"
+#include "framebuffer.hpp"
+#include "line.hpp"
+#include "polygon.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +76,6 @@ Polygon readPolygon(FILE * file)
     int x, y;
     uint32_t rgb;
     Polygon poly;
-    initPolygon(&poly);
 
     char temp = getc(file);
     if (temp == '|') {
@@ -105,7 +104,7 @@ Polygon readPolygon(FILE * file)
             temp = getc(file);
         }
         // Add point
-        addPointPolygon(&poly,x,y,rgb);
+        poly.addPoint(x,y,rgb);
 
         if (temp != '|') {
             temp = getc(file);
@@ -152,7 +151,7 @@ Circle readCircle(FILE * file)
         temp = getc(file);
     }
 
-    return makeCircle(xc,yc,r,rgb);
+    return Circle(xc,yc,r,rgb);
 }
 
 // Reads one entry of line
@@ -197,10 +196,10 @@ Line readLine(FILE * file)
         temp = getc(file);
     }
 
-    return makeLine(x1,y1,x2,y2,rgb);
+    return Line(x1,y1,x2,y2,rgb);
 }
 
-void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
+void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
 {
     //char temp;
     int tankSpeed = 5;
@@ -217,12 +216,12 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
     for (frameCounter = 0; frameCounter < frames; frameCounter++) {
         // Tank 1 -> Polygon 1 - 3, Circle 1 - 4, Line 1-5
         for (int i = 0; i < 3; i++){
-            drawPolygon(fb, listOfPolygon[i]);
-            drawCircleObject(fb, listOfCircle[i]);
+            listOfPolygon[i].draw(fb);
+            listOfCircle[i].draw(fb);
         }
         // Plane -> Polygon 7 - 11; Bullet -> Circle 9, Line 11 - 13
         for (int i = 6; i < 11; i++) {
-            drawPolygon(fb, listOfPolygon[i]);
+            listOfPolygon[i].draw(fb);
         }
         tempAngle += angle;
         if (tempAngle < -MAXANGLE){
@@ -231,40 +230,40 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
         }
         // Draw tank's bullet when it's time
         if ((frameCounter >= 49) && (frameCounter <= 99)) {
-            drawCircleObject(fb, listOfCircle[3]);
+            listOfCircle[3].draw(fb);
             if (frameCounter <= 60) {
                 for (int i = 0;i < 3;i++) {
-                    drawLineObject(fb,listOfLine[i]);
+                    listOfLine[i].draw(fb);
                 }
             }
         }
         // Draw plane's bullet when it's time
         if ((frameCounter >= 5) && (frameCounter <= 25)) {
-            drawCircleObject(fb, listOfCircle[8]);
+            listOfCircle[8].draw(fb);
         }
 
         delay(33);
-        swapBuffer(fb);
+        fb.updateScreen();
         //scanf("%c",&temp);
 
         // Move tank
         for (int i = 0; i < 3; i++){
-            movePolygon(&listOfPolygon[i], tankSpeed, 0);
-            moveCircle(&listOfCircle[i], tankSpeed, 0);
+            listOfPolygon[i].move(tankSpeed, 0);
+            listOfCircle[i].move(tankSpeed, 0);
         }
         // Move plane
         for (int i = 6; i < 11; i++) {
-            rotatePolygon(&listOfPolygon[i], angle);
-            movePolygon(&listOfPolygon[i], -planeSpeed, airPlaneSpeedY);
+            listOfPolygon[i].rotate(angle);
+            listOfPolygon[i].move(-planeSpeed, airPlaneSpeedY);
         }
         // Move tank bullet (when it's time)
         if ((frameCounter >= 49) && (frameCounter < 99)) {
-            moveCircle(&listOfCircle[3], bulletSpeed, 0);
+            listOfCircle[3].move(bulletSpeed, 0);
             // Blast effect
             switch (frameCounter) {
                 case 49:
                     for (int i = 0;i < 3;i++) {
-                        scaleLineAtAnchor(&listOfLine[i],0.1,listOfLine[i].P1.x, listOfLine[i].P1.y);
+                        listOfLine[i].scaleLine(0.1, listOfLine[i].getP1().x, listOfLine[i].getP1().y);
                     }
                     break;
                 case 50:
@@ -273,7 +272,7 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
                 case 53:
                 case 54:
                     for (int i = 0;i < 3;i++) {
-                        scaleLineAtAnchor(&listOfLine[i],2,listOfLine[i].P1.x, listOfLine[i].P1.y);
+                        listOfLine[i].scaleLine(2, listOfLine[i].getP1().x, listOfLine[i].getP1().y);
                     }
                     break;
                 case 55:
@@ -282,46 +281,47 @@ void animateAllObject(FBUFFER *fb, Line* listOfLine, Circle* listOfCircle, Polyg
                 case 58:
                 case 59:
                     for (int i = 0;i < 3;i++) {
-                        scaleLineAtAnchor(&listOfLine[i],0.5,listOfLine[i].P2.x, listOfLine[i].P2.y);
+                        listOfLine[i].scaleLine(0.5,listOfLine[i].getP2().x, listOfLine[i].getP2().y);
                     }
                     break;
             }
         } else if (frameCounter < 47) {
             for (int i = 0; i < 3;i++) {
-                moveLine(&listOfLine[i],tankSpeed,0);
+                listOfLine[i].move(tankSpeed,0);
             }
             if (frameCounter < 29) {
-                moveCircle(&listOfCircle[3], tankSpeed, 0);
+                listOfCircle[3].move(tankSpeed, 0);
             }
         }
         // Move plane bullet (when it's time)
         if ((frameCounter >= 5) && (frameCounter <= 25)) {
-            moveCircle(&listOfCircle[8], 0, bulletSpeed);
+            listOfCircle[8].move(0, bulletSpeed);
         } else if (frameCounter < 5) {
-            moveCircle(&listOfCircle[8], -planeSpeed, 0);
+            listOfCircle[8].move(-planeSpeed, 0);
         }
     }
 }
 
-void draw(FBUFFER *fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
+void draw(Framebuffer& fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
 {
     int i;
     for (i = 0; i < numOfPolygon; i++) {
-        drawPolygon(fb,listOfPolygon[i]);
+        listOfPolygon[i].draw(fb);
     }
     for (i = 0; i < numOfCircle; i++) {
-        drawCircleObject(fb,listOfCircle[i]);
+        listOfCircle[i].draw(fb);
     }
     for (i = 0; i < numOfLine; i++) {
-        drawLineObject(fb,listOfLine[i]);
+        listOfLine[i].draw(fb);
     }
-    swapBuffer(fb);
+    fb.updateScreen();
 }
 
 int main()
 {
     char temp;
-    FBUFFER fb;
+    Framebuffer fb;
+
     Polygon * listOfPolygon;
     Circle * listOfCircle;
     Line * listOfLine;
@@ -337,17 +337,15 @@ int main()
     listOfLine = (Line *) malloc(sizeof(Line));
     numOfLine = 0;
 
-    init(&fb);
-
-    printf("Width : %d\nHeight : %d\n", fb.xres, fb.yres);
+    printf("Width : %d\nHeight : %d\n", fb.getXRes(), fb.getYRes());
     scanf("%c", &temp);
 
     // Turn off the cursor
     system("setterm -cursor off");
 
-    clear(&fb);
-    swapBuffer(&fb);
-
+    fb.clear();
+    fb.updateScreen();
+    
     // Open file
     FILE *inputFile = fopen(FILENAME, "r");
     temp = getc(inputFile);
@@ -395,19 +393,18 @@ int main()
     fclose(inputFile);
 
     // Draw all Polygon, Circle, and Line
-    // draw(&fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
-
-    animateAllObject(&fb, listOfLine, listOfCircle, listOfPolygon);
+    draw(fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
     // Pause
-    //scanf("%c", &temp);
+    scanf("%c", &temp);
+
+    animateAllObject(fb, listOfLine, listOfCircle, listOfPolygon);
 
     // Turn the cursor back on
     system("setterm -cursor on");
 
-    clear(&fb);
-    swapBuffer(&fb);
-    destroy(&fb);
+    fb.clear();
+    fb.updateScreen();
 
     return 0;
 }
