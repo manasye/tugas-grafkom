@@ -26,7 +26,15 @@ Line::Line(short x1, short y1, short x2, short y2, uint32_t rgb)
     this->color = rgb;
 }
 
-void Line::draw(Framebuffer * fb)
+Point Line::getP1() {
+    return this->P1;
+}
+
+Point Line::getP2() {
+    return this->P2;
+}
+
+void Line::draw(Framebuffer& fb)
 {
     // Check delta of x and y
     short dx = (this->P2.x - this->P1.x);
@@ -53,7 +61,7 @@ void Line::draw(Framebuffer * fb)
 
         for (short y = startY; y <= endY; y++)
         {
-            fb->setPixel(currX, y, this->color);
+            fb.setPixel(currX, y, this->color);
             control += doubledx;
             if (control > 0)
             {
@@ -75,7 +83,7 @@ void Line::draw(Framebuffer * fb)
 
         for (short x = startX; x <= endX; x++)
         {
-            fb->setPixel(x, currY, this->color);
+            fb.setPixel(x, currY, this->color);
             control += doubledy;
             if (control > 0)
             {

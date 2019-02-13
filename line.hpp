@@ -14,9 +14,14 @@
 class Line {
     public:
         Line(short x1, short y1, short x2, short y2, uint32_t rgb);
-
-        void draw(Framebuffer * fb);
+        // Getters
+        Point getP1();
+        Point getP2();
+        // Draw this line
+        void draw(Framebuffer& fb);
+        // Move this line
         void move(short dx, short dy);
+        // Rotate this line
         void rotate(float degree);
         // Scale line based on it's center point
         void scaleLine(float scaleFactor);
