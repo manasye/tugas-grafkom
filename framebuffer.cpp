@@ -65,14 +65,6 @@ Framebuffer::~Framebuffer()
     free(this->backBuffer2);
 }
 
-int Framebuffer::getXRes() {
-    return this->xres;
-}
-
-int Framebuffer::getYRes() {
-    return this->yres;
-}
-
 void Framebuffer::setPixel(short x, short y, uint32_t rgb)
 {   
     if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres)) 
@@ -97,7 +89,7 @@ void Framebuffer::flush()
     }
 }
 
-void Framebuffer::swapBuffer() 
+void Framebuffer::updateScreen() 
 {
     if (!this->firstTime) {
         this->flushThread->join();

@@ -243,7 +243,7 @@ void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, P
         }
 
         delay(33);
-        fb.swapBuffer();
+        fb.updateScreen();
         //scanf("%c",&temp);
 
         // Move tank
@@ -314,7 +314,7 @@ void draw(Framebuffer& fb, Line *listOfLine, Circle* listOfCircle, Polygon *list
     for (i = 0; i < numOfLine; i++) {
         listOfLine[i].draw(fb);
     }
-    fb.swapBuffer();
+    fb.updateScreen();
 }
 
 int main()
@@ -344,7 +344,7 @@ int main()
     system("setterm -cursor off");
 
     fb.clear();
-    fb.swapBuffer();
+    fb.updateScreen();
     
     // Open file
     FILE *inputFile = fopen(FILENAME, "r");
@@ -404,7 +404,7 @@ int main()
     system("setterm -cursor on");
 
     fb.clear();
-    fb.swapBuffer();
+    fb.updateScreen();
 
     return 0;
 }
