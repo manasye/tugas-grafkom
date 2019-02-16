@@ -325,7 +325,7 @@ int main()
 {
     char temp;
     Framebuffer fb;
-    Viewport vp (fb, 500, 500, 100, 100);
+    Viewport vp (&fb, 500, 500, 100, 100);
 
     Polygon * listOfPolygon;
     Circle * listOfCircle;
@@ -408,8 +408,8 @@ int main()
     // Turn the cursor back on
     system("setterm -cursor on");
 
-    //fb.clear();
-    //fb.updateScreen();
+    fb.clear();
+    fb.updateScreen();
 
     return 0;
 }
