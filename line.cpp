@@ -1,4 +1,4 @@
-#include "framebuffer.hpp"
+#include "DrawSurface.hpp"
 #include "line.hpp"
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,7 +42,7 @@ Point Line::getP2() {
     return this->P2;
 }
 
-void Line::draw(Framebuffer& fb)
+void Line::draw(DrawSurface& fb)
 {
     // Check delta of x and y
     short dx = (this->P2.x - this->P1.x);

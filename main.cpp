@@ -1,4 +1,6 @@
+#include "DrawSurface.hpp"
 #include "framebuffer.hpp"
+#include "Viewport.hpp"
 #include "line.hpp"
 #include "polygon.hpp"
 #include <stdio.h>
@@ -199,7 +201,7 @@ Line readLine(FILE * file)
     return Line(x1,y1,x2,y2,rgb);
 }
 
-void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
+void animateAllObject(DrawSurface& fb, Line* listOfLine, Circle* listOfCircle, Polygon* listOfPolygon)
 {
     //char temp;
     int tankSpeed = 5;
@@ -304,7 +306,7 @@ void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, P
     }
 }
 
-void draw(Framebuffer& fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
+void draw(DrawSurface& fb, Line *listOfLine, Circle* listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
 {
     int i;
     for (i = 0; i < numOfPolygon; i++) {
@@ -323,6 +325,7 @@ int main()
 {
     char temp;
     Framebuffer fb;
+    Viewport vp (fb, 500, 500, 100, 100);
 
     Polygon * listOfPolygon;
     Circle * listOfCircle;
@@ -395,18 +398,18 @@ int main()
     fclose(inputFile);
 
     // Draw all Polygon, Circle, and Line
-    draw(fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
+    draw(vp, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
     // Pause
     scanf("%c", &temp);
 
-    animateAllObject(fb, listOfLine, listOfCircle, listOfPolygon);
+    animateAllObject(vp, listOfLine, listOfCircle, listOfPolygon);
 
     // Turn the cursor back on
     system("setterm -cursor on");
 
-    fb.clear();
-    fb.updateScreen();
+    //fb.clear();
+    //fb.updateScreen();
 
     return 0;
 }

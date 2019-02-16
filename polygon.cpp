@@ -1,5 +1,5 @@
 #include "line.hpp"
-#include "framebuffer.hpp"
+#include "DrawSurface.hpp"
 #include "polygon.hpp"
 #include <math.h>
 #include <stdio.h>
@@ -22,7 +22,7 @@ void Polygon::addPoint(short x, short y, uint32_t rgb)
     this->numOfPoint++;
 }
 
-void Polygon::draw(Framebuffer& fb)
+void Polygon::draw(DrawSurface& fb)
 {
     if (this->numOfPoint == 1)
     {
@@ -134,7 +134,7 @@ Circle::Circle(short xc, short yc, short radius, uint32_t rgb)
     this->color = rgb;
 }
 
-void Circle::drawOtherCirclePixels(Framebuffer& fb, short x, short y)
+void Circle::drawOtherCirclePixels(DrawSurface& fb, short x, short y)
 {
     fb.setPixel(this->centerPoint.x + x, this->centerPoint.y + y, this->color);
     fb.setPixel(this->centerPoint.x - x, this->centerPoint.y + y, this->color);
@@ -148,7 +148,7 @@ void Circle::drawOtherCirclePixels(Framebuffer& fb, short x, short y)
 
 // Courtesy of https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 
-void Circle::draw(Framebuffer& fb)
+void Circle::draw(DrawSurface& fb)
 {
     short x = 0;
     short y = this->radius;

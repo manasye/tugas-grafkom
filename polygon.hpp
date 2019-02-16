@@ -2,14 +2,14 @@
 #define POLYGON_HPP
 
 #include "point.h"
-#include "framebuffer.hpp"
+#include "DrawSurface.hpp"
 
 class Polygon {
     public:
         Polygon();
         void addPoint(short x, short y, uint32_t rgb);
         // Draw this polygon to framebuffer
-        void draw(Framebuffer& fb);
+        void draw(DrawSurface& fb);
         // Move the polygon
         void move(short dx, short dy);
         // Rotate this polygon
@@ -33,7 +33,7 @@ class Circle {
     public:
         Circle(short xc, short yc, short radius, uint32_t rgb);
         // Draw this circle to framebuffer
-        void draw(Framebuffer& fb);
+        void draw(DrawSurface& fb);
         // Move this circle
         void move(short dx, short dy);
         // Scale this circle
@@ -45,7 +45,7 @@ class Circle {
         short radius;
         uint32_t color;
 
-        void drawOtherCirclePixels(Framebuffer& fb, short x, short y);
+        void drawOtherCirclePixels(DrawSurface& fb, short x, short y);
 
 };
 

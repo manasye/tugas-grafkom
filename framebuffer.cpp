@@ -32,7 +32,7 @@ int rgbToHex(int r, int g, int b)
 Framebuffer::Framebuffer()
 {
     // Getting the framebuffer
-    int temp = open("/dev/fb1", O_RDWR);
+    int temp = open("/dev/fb0", O_RDWR);
     struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
     assert(temp > 0);

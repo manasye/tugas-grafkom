@@ -2,6 +2,7 @@
 #define LINE_HPP
 
 #include "point.h"
+#include "DrawSurface.hpp"
 
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
@@ -19,7 +20,7 @@ class Line {
         Point getP1();
         Point getP2();
         // Draw this line
-        void draw(Framebuffer& fb);
+        void draw(DrawSurface& fb);
         // Move this line
         void move(short dx, short dy);
         // Rotate this line
