@@ -8,7 +8,7 @@ class Polygon {
     public:
         Polygon();
         void addPoint(short x, short y, uint32_t rgb);
-        // Draw this polygon to framebuffer  
+        // Draw this polygon to framebuffer
         void draw(Framebuffer& fb);
         // Move the polygon
         void move(short dx, short dy);
@@ -18,7 +18,9 @@ class Polygon {
         void scale(float scaleFactor);
         // Scale the polygon based on an anchor point (ax, ay)
         void scaleAtAnchor(float scaleFactor, short ax, short ay);
-        
+        // Rotate the polygon based on an anchor point (ax, ay)
+        void rotateAtAnchor(float degree, short ax, short ay);
+
 
     private:
         Point * listOfPoint;

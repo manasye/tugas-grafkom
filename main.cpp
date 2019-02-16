@@ -211,8 +211,8 @@ void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, P
     int frameCounter;
     float angle = -1;
     float tempAngle = 0;
-    int airPlaneSpeedY = 10;
-    const int MAXANGLE = 5;
+    int planeSpeedY = 15;
+    const int MAXANGLE = -5;
     for (frameCounter = 0; frameCounter < frames; frameCounter++) {
         // Tank 1 -> Polygon 1 - 3, Circle 1 - 4, Line 1-5
         for (int i = 0; i < 3; i++){
@@ -223,10 +223,11 @@ void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, P
         for (int i = 6; i < 11; i++) {
             listOfPolygon[i].draw(fb);
         }
+
         tempAngle += angle;
-        if (tempAngle < -MAXANGLE){
+        if (tempAngle < MAXANGLE){
             angle = 0;
-            airPlaneSpeedY = 0;
+            planeSpeedY = 0;
         }
         // Draw tank's bullet when it's time
         if ((frameCounter >= 49) && (frameCounter <= 99)) {
@@ -254,8 +255,9 @@ void animateAllObject(Framebuffer& fb, Line* listOfLine, Circle* listOfCircle, P
         // Move plane
         for (int i = 6; i < 11; i++) {
             listOfPolygon[i].rotate(angle);
-            listOfPolygon[i].move(-planeSpeed, airPlaneSpeedY);
+            listOfPolygon[i].move(-planeSpeed, planeSpeedY);
         }
+
         // Move tank bullet (when it's time)
         if ((frameCounter >= 49) && (frameCounter < 99)) {
             listOfCircle[3].move(bulletSpeed, 0);
@@ -345,7 +347,7 @@ int main()
 
     fb.clear();
     fb.updateScreen();
-    
+
     // Open file
     FILE *inputFile = fopen(FILENAME, "r");
     temp = getc(inputFile);

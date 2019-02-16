@@ -12,7 +12,7 @@
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
 
-void clearBuffer(uint32_t * buf, int xres, int yres) 
+void clearBuffer(uint32_t * buf, int xres, int yres)
 {
     int i, j;
     for (j = 0; j < yres; j++)
@@ -32,7 +32,7 @@ int rgbToHex(int r, int g, int b)
 Framebuffer::Framebuffer()
 {
     // Getting the framebuffer
-    int temp = open("/dev/fb0", O_RDWR);
+    int temp = open("/dev/fb1", O_RDWR);
     struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
     assert(temp > 0);
@@ -66,8 +66,8 @@ Framebuffer::~Framebuffer()
 }
 
 void Framebuffer::setPixel(short x, short y, uint32_t rgb)
-{   
-    if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres)) 
+{
+    if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres))
     {
         this->currentBuffer[y * this->xres + x] = rgb;
     }
@@ -78,7 +78,7 @@ void Framebuffer::clear()
     clearBuffer(this->currentBuffer, this->xres, this->yres);
 }
 
-void Framebuffer::flush() 
+void Framebuffer::flush()
 {
     if (this->currentBuffer == this->backBuffer1) {
         memcpy(this->frameBuffer, this->backBuffer2, this->xres * 4 * this->yres);
@@ -89,7 +89,7 @@ void Framebuffer::flush()
     }
 }
 
-void Framebuffer::updateScreen() 
+void Framebuffer::updateScreen()
 {
     if (!this->firstTime) {
         this->flushThread->join();
@@ -102,6 +102,6 @@ void Framebuffer::updateScreen()
     } else {
         this->currentBuffer = this->backBuffer1;
     }
-    
+
     this->flushThread = new std::thread(&Framebuffer::flush, this);
 }

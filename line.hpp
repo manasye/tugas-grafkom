@@ -13,6 +13,7 @@
 
 class Line {
     public:
+        Line(Point P1, Point P2);
         Line(short x1, short y1, short x2, short y2, uint32_t rgb);
         // Getters
         Point getP1();

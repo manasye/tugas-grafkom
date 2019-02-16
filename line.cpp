@@ -17,6 +17,14 @@ short sign(short x)
         return 0;
 }
 
+Line::Line(Point P1, Point P2)
+{
+    this->P1.x = P1.x;
+    this->P2.x = P2.x;
+    this->P1.y = P1.y;
+    this->P2.y = P2.y;
+}
+
 Line::Line(short x1, short y1, short x2, short y2, uint32_t rgb)
 {
     this->P1.x = x1;

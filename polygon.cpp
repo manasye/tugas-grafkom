@@ -60,48 +60,39 @@ void Polygon::move(short dx, short dy)
 }
 
 // Rotation
+void Polygon::rotateAtAnchor(float degree, short ax, short ay)
+{
+    Point P1;
+    P1.x = ax;
+    P1.y = ay;
+    
+    int n = this->numOfPoint;
+
+    for (int i = 0; i < n; i++){
+        Point P2 = this->listOfPoint[i];
+
+        Line line(P1, P2);
+        line.rotate(degree);
+
+        this->listOfPoint[i] = line.getP2();
+    }
+}
+
 void Polygon::rotate(float degree)
 {
-    int n = this->numOfPoint;
-    short tempx = 0;
-    short tempy = 0;
-
-    int isOdd = n % 2 == 1;
-    int adjust = isOdd ? 1 : 2;
-    Point P1;
-    Point P2;
-
-    for (int i = 0; i < n-adjust; i++){
-        P1 = this->listOfPoint[i];
-        P2 = this->listOfPoint[i+1];
-
-        if (i > 0){
-            P2.x += tempx;
-            P2.y += tempy;
-        }
-
-        Line line (P1.x, P1.y, P2.x, P2.y, this->listOfColor[i]);
-        line.rotate(degree);
-
-        if (isOdd){
-            tempx += line.getP2().x - P2.x;
-            tempy += line.getP2().y - P2.y;
-        } else {
-            tempx = line.getP2().x - P2.x;
-            tempy = line.getP2().y - P2.y;
-        }
-        this->listOfPoint[i+1] = line.getP2();
+    int xc = 0;
+    int yc = 0;
+    for (int i = 0;i < this->numOfPoint; i++)
+    {
+        xc += this->listOfPoint[i].x;
+        yc += this->listOfPoint[i].y;
     }
 
-    if (!isOdd){
-        P1 = this->listOfPoint[0];
-        P2 = this->listOfPoint[n-1];
+    xc = xc / this->numOfPoint;
+    yc = yc / this->numOfPoint;
 
-        Line line (P1.x, P1.y, P2.x, P2.y, this->listOfColor[n-1]);
-        line.rotate(degree);
-
-        this->listOfPoint[n-1] = line.getP2();
-    }
+    // Scale based on centroid
+    this->rotateAtAnchor(degree, xc, yc);
 }
 
 // Scaling
