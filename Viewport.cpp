@@ -48,7 +48,7 @@ void Viewport::setPixel(short x, short y, uint32_t rgb) {
     }
 }
 
-void Viewport::updateScreen() {
+void Viewport::flushToFramebuffer() {
     // Also draws a white border to signify the viewport
     for (int i = -1; i <= this->xres; i++) {
         this->fb->setPixel(this->xloc + i, this->yloc - 1,0xFFFFFF);
@@ -66,7 +66,11 @@ void Viewport::updateScreen() {
     for (int i = -1; i <= this->xres; i++) {
         this->fb->setPixel(this->xloc + i, this->yloc + j,0xFFFFFF);
     }
-    
-    this->fb->updateScreen();
+
     this->clear();
+}
+
+void Viewport::updateScreen() {
+    this->flushToFramebuffer();
+    this->fb->updateScreen();
 }

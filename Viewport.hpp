@@ -21,10 +21,14 @@ class Viewport : public DrawSurface {
         short getViewportYPos();
         void setViewportYPos(short yloc);
 
+        // Clears the buffer
         void clear();
+        // Flushes to the framebuffer (without updating the screen)
+        void flushToFramebuffer();
 
         // Implementing methods from DrawSurface
         void setPixel(short x, short y, uint32_t rgb);
+        // Flush to framebuffer, and updates the screen
         void updateScreen();
 
     private:
