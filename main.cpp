@@ -368,7 +368,7 @@ int main()
 {
     char temp;
     Framebuffer fb;
-    Viewport vp(&fb, 500, 500, 100, 100);
+    Viewport vp(&fb, 1000, 500, 100, 100);
 
     Polygon *listOfPolygon;
     Circle *listOfCircle;

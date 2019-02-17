@@ -19,6 +19,7 @@ class Line {
         // Getters
         Point getP1();
         Point getP2();
+        uint32_t getColor();
         // Draw this line
         void draw(DrawSurface& fb);
         // Move this line

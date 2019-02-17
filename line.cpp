@@ -57,9 +57,18 @@ short computeCode(short x, short y, short xmin, short xmax,
 
 // Clip based on cohen sutherland algorithm
 // https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
-Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2, short xmin, short xmax,
-                         short ymin, short ymax, uint32_t rgb)
+Line clipCohenSutherland(DrawSurface &fb, Line &line)
 {
+    short x1 = line.getP1().x;
+    short y1 = line.getP1().y;
+    short x2 = line.getP2().x;
+    short y2 = line.getP2().y;
+
+    short xmin = 0;
+    short xmax = fb.getXRes();
+    short ymin = 0;
+    short ymax = fb.getYRes();
+
     // Compute region codes for P1, P2
     short code1 = computeCode(x1, y1, xmin, xmax, ymin, ymax);
     short code2 = computeCode(x2, y2, xmin, xmax, ymin, ymax);
@@ -71,6 +80,10 @@ Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2
         {
             // Both inside viewport
             accept = true;
+            break;
+        }
+        else if (code1 & code2) 
+        {
             break;
         }
         else
@@ -92,25 +105,56 @@ Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2
             // If above viewport
             if (codeOut & TOP)
             {
-                x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
+                short ydiff = y2 - y1;
+                if (ydiff == 0) 
+                {
+                    x = x1;
+                } 
+                else 
+                {
+                    x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
+                }
                 y = ymax;
             }
             // If below viewport
             else if (codeOut & BOTTOM)
             {
-                x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
+                short ydiff = y2 - y1;
+                if (ydiff == 0) 
+                {
+                    x = x1;
+                } 
+                else 
+                {
+                    x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
+                }
                 y = ymin;
             }
             // If to right viewport
             else if (codeOut & RIGHT)
             {
-                y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
+                short xdiff = x2 - x1;
+                if (xdiff == 0) 
+                {
+                    y = y1;
+                } 
+                else 
+                {
+                    y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
+                }
                 x = xmax;
             }
             // If to left viewport
             else if (codeOut & LEFT)
             {
-                y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
+                short xdiff = x2 - x1;
+                if (xdiff == 0) {
+                    y = y1;
+                } 
+                else 
+                {
+                    y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
+                }
                 x = xmin;
             }
 
@@ -130,7 +174,14 @@ Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2
         }
     }
 
-    return Line(x1, y1, x2, y2, rgb);
+    if (accept) 
+    {
+        return Line(x1, y1, x2, y2, line.getColor());
+    } 
+    else 
+    {
+        return Line(0, 0, 0, 0, line.getColor());
+    }
 }
 
 Line::Line(Point P1, Point P2)
@@ -160,11 +211,18 @@ Point Line::getP2()
     return this->P2;
 }
 
+uint32_t Line::getColor()
+{
+    return this->color;
+}
+
 void Line::draw(DrawSurface &fb)
 {
+    Line toDraw = clipCohenSutherland(fb,*this);
+
     // Check delta of x and y
-    short dx = (this->P2.x - this->P1.x);
-    short dy = (this->P2.y - this->P1.y);
+    short dx = (toDraw.getP2().x - toDraw.getP1().x);
+    short dy = (toDraw.getP2().y - toDraw.getP1().y);
 
     // Store absolute delta
     short absdx = abs(dx);
@@ -178,10 +236,10 @@ void Line::draw(DrawSurface &fb)
     {
         short control = doubledx - absdy;
 
-        short startY = dy > 0 ? this->P1.y : this->P2.y;
-        short endY = dy > 0 ? this->P2.y : this->P1.y;
-        short currX = dy > 0 ? this->P1.x : this->P2.x;
-        short endX = dy > 0 ? this->P2.x : this->P1.x;
+        short startY = dy > 0 ? toDraw.getP1().y : toDraw.getP2().y;
+        short endY = dy > 0 ? toDraw.getP2().y : toDraw.getP1().y;
+        short currX = dy > 0 ? toDraw.getP1().x : toDraw.getP2().x;
+        short endX = dy > 0 ? toDraw.getP2().x : toDraw.getP1().x;
 
         short increment = sign(endX - currX);
 
@@ -200,10 +258,10 @@ void Line::draw(DrawSurface &fb)
     {
         short control = doubledy - absdx;
 
-        short startX = dx > 0 ? this->P1.x : this->P2.x;
-        short endX = dx > 0 ? this->P2.x : this->P1.x;
-        short currY = dx > 0 ? this->P1.y : this->P2.y;
-        short endY = dx > 0 ? this->P2.y : this->P1.y;
+        short startX = dx > 0 ? toDraw.getP1().x : toDraw.getP2().x;
+        short endX = dx > 0 ? toDraw.getP2().x : toDraw.getP1().x;
+        short currY = dx > 0 ? toDraw.getP1().y : toDraw.getP2().y;
+        short endY = dx > 0 ? toDraw.getP2().y : toDraw.getP1().y;
 
         short increment = sign(endY - currY);
 

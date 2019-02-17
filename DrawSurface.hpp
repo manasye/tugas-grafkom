@@ -6,12 +6,12 @@
 class DrawSurface
 {
   public:
-    int getXRes()
+    short getXRes()
     {
         return xres;
     }
 
-    int getYRes()
+    short getYRes()
     {
         return yres;
     }
@@ -20,8 +20,8 @@ class DrawSurface
     void virtual updateScreen() = 0;
 
   protected:
-    int yres;
-    int xres;
+    short yres;
+    short xres;
 };
 
 #endif
