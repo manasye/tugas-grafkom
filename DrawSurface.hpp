@@ -3,22 +3,25 @@
 
 #include <stdint.h>
 
-class DrawSurface {
-    public:
-        int getXRes() {
-            return xres;
-        }
+class DrawSurface
+{
+  public:
+    int getXRes()
+    {
+        return xres;
+    }
 
-        int getYRes() {
-            return yres;
-        }
+    int getYRes()
+    {
+        return yres;
+    }
 
-        void virtual setPixel(short x, short y, uint32_t rgb) = 0;
-        void virtual updateScreen() = 0;
-    
-    protected:
-        int yres;
-        int xres;
+    void virtual setPixel(short x, short y, uint32_t rgb) = 0;
+    void virtual updateScreen() = 0;
+
+  protected:
+    int yres;
+    int xres;
 };
 
 #endif

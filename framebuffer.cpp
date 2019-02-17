@@ -12,7 +12,7 @@
 #define BLACK 0x000000
 #define WHITE 0xFFFFFF
 
-void clearBuffer(uint32_t * buf, int xres, int yres)
+void clearBuffer(uint32_t *buf, int xres, int yres)
 {
     int i, j;
     for (j = 0; j < yres; j++)
@@ -36,28 +36,34 @@ Framebuffer::Framebuffer()
     struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
     assert(temp > 0);
+
     // Getting framebuffer information - width, height
     assert(ioctl(temp, FBIOGET_VSCREENINFO, &vinfo) == 0);
     assert(ioctl(temp, FBIOGET_FSCREENINFO, &finfo) == 0);
     this->xres = finfo.line_length / 4;
     this->yres = vinfo.yres_virtual;
+
     // Getting the framebuffer memory
-    this->frameBuffer = (uint32_t *) mmap(NULL, finfo.line_length * this->yres, PROT_READ | PROT_WRITE, MAP_SHARED, temp, 0);
+    this->frameBuffer = (uint32_t *)mmap(NULL, finfo.line_length * this->yres, PROT_READ | PROT_WRITE, MAP_SHARED, temp, 0);
     assert(this->frameBuffer != MAP_FAILED);
+
     // Allocates back buffer
-    this->backBuffer1 = (uint32_t *) malloc(finfo.line_length * this->yres);
+    this->backBuffer1 = (uint32_t *)malloc(finfo.line_length * this->yres);
     clearBuffer(this->backBuffer1, this->xres, this->yres);
-    this->backBuffer2 = (uint32_t *) malloc(finfo.line_length * this->yres);
+    this->backBuffer2 = (uint32_t *)malloc(finfo.line_length * this->yres);
     clearBuffer(this->backBuffer2, this->xres, this->yres);
+
     // Sets current back buffer to the first one
     this->currentBuffer = this->backBuffer1;
+
     // Initialize flushThread
     this->firstTime = 1;
 }
 
 Framebuffer::~Framebuffer()
 {
-    if (!this->firstTime) {
+    if (!this->firstTime)
+    {
         this->flushThread->join();
     }
     munmap(&(this->frameBuffer), this->xres * 4 * this->yres);
@@ -80,26 +86,35 @@ void Framebuffer::clear()
 
 void Framebuffer::flush()
 {
-    if (this->currentBuffer == this->backBuffer1) {
+    if (this->currentBuffer == this->backBuffer1)
+    {
         memcpy(this->frameBuffer, this->backBuffer2, this->xres * 4 * this->yres);
-        clearBuffer(this->backBuffer2,this->xres, this->yres);
-    } else {
+        clearBuffer(this->backBuffer2, this->xres, this->yres);
+    }
+    else
+    {
         memcpy(this->frameBuffer, this->backBuffer1, this->xres * 4 * this->yres);
-        clearBuffer(this->backBuffer1,this->xres, this->yres);
+        clearBuffer(this->backBuffer1, this->xres, this->yres);
     }
 }
 
 void Framebuffer::updateScreen()
 {
-    if (!this->firstTime) {
+    if (!this->firstTime)
+    {
         this->flushThread->join();
-    } else {
+    }
+    else
+    {
         this->firstTime = 0;
     }
 
-    if (this->currentBuffer == this->backBuffer1) {
+    if (this->currentBuffer == this->backBuffer1)
+    {
         this->currentBuffer = this->backBuffer2;
-    } else {
+    }
+    else
+    {
         this->currentBuffer = this->backBuffer1;
     }
 

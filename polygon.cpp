@@ -7,8 +7,8 @@
 
 Polygon::Polygon()
 {
-    this->listOfPoint = (Point *) malloc(sizeof(Point));
-    this->listOfColor = (uint32_t *) malloc(sizeof(uint32_t));
+    this->listOfPoint = (Point *)malloc(sizeof(Point));
+    this->listOfColor = (uint32_t *)malloc(sizeof(uint32_t));
     this->numOfPoint = 0;
 }
 
@@ -17,12 +17,12 @@ void Polygon::addPoint(short x, short y, uint32_t rgb)
     this->listOfPoint[this->numOfPoint].x = x;
     this->listOfPoint[this->numOfPoint].y = y;
     this->listOfColor[this->numOfPoint] = rgb;
-    this->listOfPoint = (Point *) realloc(this->listOfPoint, (this->numOfPoint + 2) * sizeof(Point));
-    this->listOfColor = (uint32_t *) realloc(this->listOfColor, (this->numOfPoint + 2) * sizeof(uint32_t));
+    this->listOfPoint = (Point *)realloc(this->listOfPoint, (this->numOfPoint + 2) * sizeof(Point));
+    this->listOfColor = (uint32_t *)realloc(this->listOfColor, (this->numOfPoint + 2) * sizeof(uint32_t));
     this->numOfPoint++;
 }
 
-void Polygon::draw(DrawSurface& fb)
+void Polygon::draw(DrawSurface &fb)
 {
     if (this->numOfPoint == 1)
     {
@@ -31,7 +31,7 @@ void Polygon::draw(DrawSurface& fb)
     else if (numOfPoint > 1)
     {
         int i;
-        Line * tempLine;
+        Line *tempLine;
         for (i = 0; i < numOfPoint - 1; i++)
         {
             tempLine = new Line(this->listOfPoint[i].x, this->listOfPoint[i].y, this->listOfPoint[i + 1].x, this->listOfPoint[i + 1].y, this->listOfColor[i]);
@@ -47,15 +47,16 @@ void Polygon::draw(DrawSurface& fb)
 void Polygon::move(short dx, short dy)
 {
     int n = this->numOfPoint;
-    for (int i = 0; i < n; i+=2) {
+    for (int i = 0; i < n; i += 2)
+    {
         Point P1 = this->listOfPoint[i];
-        Point P2 = this->listOfPoint[i+1];
+        Point P2 = this->listOfPoint[i + 1];
 
-        Line line (P1.x, P1.y, P2.x, P2.y, this->listOfColor[i]);
+        Line line(P1.x, P1.y, P2.x, P2.y, this->listOfColor[i]);
         line.move(dx, dy);
 
         this->listOfPoint[i] = line.getP1();
-        this->listOfPoint[i+1] = line.getP2();
+        this->listOfPoint[i + 1] = line.getP2();
     }
 }
 
@@ -65,10 +66,11 @@ void Polygon::rotateAtAnchor(float degree, short ax, short ay)
     Point P1;
     P1.x = ax;
     P1.y = ay;
-    
+
     int n = this->numOfPoint;
 
-    for (int i = 0; i < n; i++){
+    for (int i = 0; i < n; i++)
+    {
         Point P2 = this->listOfPoint[i];
 
         Line line(P1, P2);
@@ -82,7 +84,7 @@ void Polygon::rotate(float degree)
 {
     int xc = 0;
     int yc = 0;
-    for (int i = 0;i < this->numOfPoint; i++)
+    for (int i = 0; i < this->numOfPoint; i++)
     {
         xc += this->listOfPoint[i].x;
         yc += this->listOfPoint[i].y;
@@ -134,7 +136,7 @@ Circle::Circle(short xc, short yc, short radius, uint32_t rgb)
     this->color = rgb;
 }
 
-void Circle::drawOtherCirclePixels(DrawSurface& fb, short x, short y)
+void Circle::drawOtherCirclePixels(DrawSurface &fb, short x, short y)
 {
     fb.setPixel(this->centerPoint.x + x, this->centerPoint.y + y, this->color);
     fb.setPixel(this->centerPoint.x - x, this->centerPoint.y + y, this->color);
@@ -148,7 +150,7 @@ void Circle::drawOtherCirclePixels(DrawSurface& fb, short x, short y)
 
 // Courtesy of https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 
-void Circle::draw(DrawSurface& fb)
+void Circle::draw(DrawSurface &fb)
 {
     short x = 0;
     short y = this->radius;

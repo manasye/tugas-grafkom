@@ -7,6 +7,17 @@
 
 #define PI 3.14
 
+const short INSIDE = 0; // 0000
+const short LEFT = 1;   // 0001
+const short RIGHT = 2;  // 0010
+const short BOTTOM = 4; // 0100
+const short TOP = 8;    // 1000
+
+//
+// Helper function
+//
+
+// Sign for draw line
 short sign(short x)
 {
     if (x > 0)
@@ -15,6 +26,123 @@ short sign(short x)
         return -1;
     else
         return 0;
+}
+
+// Check region of certain point
+// https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
+short computeCode(short x, short y, short xmin, short xmax,
+                  short ymin, short ymax)
+{
+    short code = INSIDE;
+    // Check x
+    if (x < xmin)
+    {
+        code |= LEFT;
+    }
+    else if (x > xmax)
+    {
+        code |= RIGHT;
+    }
+    // Check y
+    if (y < ymin)
+    {
+        code |= BOTTOM;
+    }
+    else if (y > ymax)
+    {
+        code |= TOP;
+    }
+    return code;
+}
+
+// Clip based on cohen sutherland algorithm
+// https://www.geeksforgeeks.org/line-clipping-set-1-cohen-sutherland-algorithm/
+Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2, short xmin, short xmax,
+                         short ymin, short ymax, uint32_t rgb)
+{
+    // Compute region codes for P1, P2
+    short code1 = computeCode(x1, y1, xmin, xmax, ymin, ymax);
+    short code2 = computeCode(x2, y2, xmin, xmax, ymin, ymax);
+    bool accept = false;
+
+    while (true)
+    {
+        if ((code1 == 0) && (code2 == 0))
+        {
+            // Both inside viewport
+            accept = true;
+            break;
+        }
+        else if (code1 && code2)
+        {
+            // Both outside viewport, same region
+            break;
+        }
+        else
+        {
+            // Some part outside viewport, clip it!
+            short codeOut;
+            short x, y;
+
+            // Pick which one is outside
+            if (code1 != 0)
+            {
+                codeOut = code1;
+            }
+            else
+            {
+                codeOut = code2;
+            }
+
+            // If above viewport
+            if (codeOut & TOP)
+            {
+                x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
+                y = ymax;
+            }
+            // If below viewport
+            else if (codeOut & BOTTOM)
+            {
+                x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
+                y = ymin;
+            }
+            // If to right viewport
+            else if (codeOut & RIGHT)
+            {
+                y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
+                x = xmax;
+            }
+            // If to left viewport
+            else if (codeOut & LEFT)
+            {
+                y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
+                x = xmin;
+            }
+
+            // Replace the "outside" part with the intersected one
+            if (codeOut == code1)
+            {
+                x1 = x;
+                y1 = y;
+                code1 = computeCode(x1, y1, xmin, xmax, ymin, ymax);
+            }
+            else
+            {
+                x2 = x;
+                y2 = y;
+                code2 = computeCode(x2, y2, xmin, xmax, ymin, ymax);
+            }
+        }
+    }
+
+    if (accept)
+    {
+        return Line(x1, y1, x2, y2, rgb);
+    }
+    else
+    {
+        return Line(0, 0, 0, 0, rgb);
+    }
 }
 
 Line::Line(Point P1, Point P2)
@@ -34,15 +162,17 @@ Line::Line(short x1, short y1, short x2, short y2, uint32_t rgb)
     this->color = rgb;
 }
 
-Point Line::getP1() {
+Point Line::getP1()
+{
     return this->P1;
 }
 
-Point Line::getP2() {
+Point Line::getP2()
+{
     return this->P2;
 }
 
-void Line::draw(DrawSurface& fb)
+void Line::draw(DrawSurface &fb)
 {
     // Check delta of x and y
     short dx = (this->P2.x - this->P1.x);
@@ -113,7 +243,7 @@ void Line::move(short dx, short dy)
 // https://www.tutorialspoint.com/computer_graphics/2d_transformation.htm
 void Line::rotate(float degree)
 {
-    float rad = (degree/180) * PI;
+    float rad = (degree / 180) * PI;
     float costheta = cos(rad);
     float sintheta = sin(rad);
 
