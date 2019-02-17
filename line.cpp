@@ -73,11 +73,6 @@ Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2
             accept = true;
             break;
         }
-        else if (code1 && code2)
-        {
-            // Both outside viewport, same region
-            break;
-        }
         else
         {
             // Some part outside viewport, clip it!
@@ -135,14 +130,7 @@ Line clipCohenSutherland(DrawSurface &fb, short x1, short x2, short y1, short y2
         }
     }
 
-    if (accept)
-    {
-        return Line(x1, y1, x2, y2, rgb);
-    }
-    else
-    {
-        return Line(0, 0, 0, 0, rgb);
-    }
+    return Line(x1, y1, x2, y2, rgb);
 }
 
 Line::Line(Point P1, Point P2)

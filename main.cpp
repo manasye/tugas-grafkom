@@ -345,7 +345,8 @@ void animateAllObject(DrawSurface &fb, Line *listOfLine, Circle *listOfCircle, P
     }
 }
 
-void draw(DrawSurface &fb, Line *listOfLine, Circle *listOfCircle, Polygon *listOfPolygon, int numOfLine, int numOfCircle, int numOfPolygon)
+void draw(DrawSurface &fb, Line *listOfLine, Circle *listOfCircle, Polygon *listOfPolygon,
+          int numOfLine, int numOfCircle, int numOfPolygon)
 {
     int i;
     for (i = 0; i < numOfPolygon; i++)
@@ -383,6 +384,12 @@ int main()
 
     listOfLine = (Line *)malloc(sizeof(Line));
     numOfLine = 0;
+
+    // Line tempLine = clipCohenSutherland(fb, 0, 70, 0, 70, 10, 50, 10, 50, YELLOW);
+    // printf("X0: %d\n", tempLine.getP1().x);
+    // printf("Y0: %d\n", tempLine.getP1().y);
+    // printf("X1: %d\n", tempLine.getP2().x);
+    // printf("Y1: %d\n", tempLine.getP2().y);
 
     printf("Width : %d\nHeight : %d\n", fb.getXRes(), fb.getYRes());
     scanf("%c", &temp);
