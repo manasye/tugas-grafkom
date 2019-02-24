@@ -68,7 +68,7 @@ Polygon::Polygon()
     this->numOfPoint = 0;
 }
 
-uin32_t Polygon::getFirstColor() {
+uint32_t Polygon::getFirstColor() {
     return this->listOfColor[0];
 }
 
