@@ -29,17 +29,19 @@ void floodFill(DrawSurface &fb, short x, short y,
     // Push if it is to be colored
     toBeColored.push_back(pairedShort(x, y));
 
-    // Loop until all to be colored empty
     while (!toBeColored.empty())
     {
         // Get current element
         pairedShort currCoor = toBeColored.front();
         toBeColored.pop_front();
+
         // Get current coordinate
         short x = currCoor.first;
         short y = currCoor.second;
+
         // Set the color
         fb.setPixel(x, y, replacementColor);
+
         // West area
         if (fb.getPixel(x - 1, y) == targetColor) {
             toBeColored.push_back(pairedShort(x - 1, y));
@@ -59,6 +61,36 @@ void floodFill(DrawSurface &fb, short x, short y,
         toBeColored.unique();
         //printf("%d\n",toBeColored.size());
     }
+
+}
+
+void floodFillRecursive(DrawSurface &fb, short x, short y,
+               uint32_t targetColor, uint32_t replacementColor)
+{
+    // Not equal to target color
+    if (fb.getPixel(x, y) != targetColor)
+        return;
+
+    // Set the color
+    fb.setPixel(x, y, replacementColor);
+
+    // West area
+    if (fb.getPixel(x - 1, y) == targetColor) {
+        floodFillRecursive(fb, x - 1, y, targetColor, replacementColor);
+    }
+    // East area
+    if (fb.getPixel(x + 1, y) == targetColor) {
+        floodFillRecursive(fb, x + 1, y, targetColor, replacementColor);
+    }
+    // North area
+    if (fb.getPixel(x, y - 1) == targetColor) {
+        floodFillRecursive(fb, x, y - 1, targetColor, replacementColor);
+    }
+    // South area
+    if (fb.getPixel(x, y + 1) == targetColor) {
+        floodFillRecursive(fb, x, y + 1, targetColor, replacementColor);
+    }
+
 }
 
 Polygon::Polygon()
@@ -101,6 +133,24 @@ void Polygon::draw(DrawSurface &fb)
         tempLine = new Line(this->listOfPoint[this->numOfPoint - 1].x, this->listOfPoint[numOfPoint - 1].y, this->listOfPoint[0].x, this->listOfPoint[0].y, this->listOfColor[numOfPoint - 1]);
         tempLine->draw(fb);
         delete tempLine;
+        
+        Point center = this->calculateCentroid();
+
+        if (!this->contains(center)) {
+            Point left = this->leftmostPoint();
+            left.y = center.y;
+            left.x += 2;
+            /*
+            while (!this->contains(left)) {
+                left.x++;
+            }
+            */
+            center = left;
+        }
+
+        printf("Coloring polygon at (%d,%d)\n",center.x, center.y);
+        floodFillRecursive(fb,center.x,center.y,BLACK,listOfColor[0]);
+    
     }
 }
 
@@ -142,19 +192,10 @@ void Polygon::rotateAtAnchor(float degree, short ax, short ay)
 
 void Polygon::rotate(float degree)
 {
-    int xc = 0;
-    int yc = 0;
-    for (int i = 0; i < this->numOfPoint; i++)
-    {
-        xc += this->listOfPoint[i].x;
-        yc += this->listOfPoint[i].y;
-    }
-
-    xc = xc / this->numOfPoint;
-    yc = yc / this->numOfPoint;
+    Point center = this->calculateCentroid();
 
     // Scale based on centroid
-    this->rotateAtAnchor(degree, xc, yc);
+    this->rotateAtAnchor(degree, center.x, center.y);
 }
 
 // Scaling
@@ -173,19 +214,9 @@ void Polygon::scaleAtAnchor(float scaleFactor, short ax, short ay)
 
 void Polygon::scale(float scaleFactor)
 {
-    // Find centroid
-    int xc = 0;
-    int yc = 0;
-    for (int i = 0; i < this->numOfPoint; i++)
-    {
-        xc += this->listOfPoint[i].x;
-        yc += this->listOfPoint[i].y;
-    }
-    xc = xc / this->numOfPoint;
-    yc = yc / this->numOfPoint;
-
+    Point centroid = this->calculateCentroid();
     // Scale based on centroid
-    this->scaleAtAnchor(scaleFactor, xc, yc);
+    this->scaleAtAnchor(scaleFactor, centroid.x, centroid.y);
 }
 
 Point Polygon::leftmostPoint() {
@@ -196,6 +227,22 @@ Point Polygon::leftmostPoint() {
         }
     }
     return leftmost;
+}
+
+Point Polygon::calculateCentroid() {
+    Point center;
+    center.x = 0;
+    center.y = 0;
+
+    for (int i = 0; i < this->numOfPoint; i++)
+    {
+        center.x += this->listOfPoint[i].x;
+        center.y += this->listOfPoint[i].y;
+    }
+    center.x = center.x / this->numOfPoint;
+    center.y = center.y / this->numOfPoint;
+
+    return center;
 }
 
 bool Polygon::contains(short x, short y) {

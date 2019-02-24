@@ -26,13 +26,14 @@ class Polygon
     // Checks if point (x,y) in this Polygon
     bool contains(short x, short y);
     bool contains(Point p);
+    
+    Point calculateCentroid();
+    Point leftmostPoint();
 
   private:
     Point *listOfPoint;
     uint32_t *listOfColor;
     int numOfPoint;
-    
-    Point leftmostPoint();
 };
 
 class Circle
