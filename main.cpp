@@ -447,10 +447,11 @@ int main()
     // Draw all Polygon, Circle, and Line
     draw(fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
+    printf("Processing...");
     // Try to draw turret barrel tank1
     floodFill(fb, 300, 410, BLACK, 0xffff00);
     fb.updateScreen();
-
+    
     // Pause
     scanf("%c", &temp);
 

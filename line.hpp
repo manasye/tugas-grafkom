@@ -15,6 +15,7 @@
 class Line {
     public:
         Line(Point P1, Point P2);
+        Line(Point P1, Point P2, uint32_t rgb);
         Line(short x1, short y1, short x2, short y2, uint32_t rgb);
         // Getters
         Point getP1();
@@ -30,6 +31,9 @@ class Line {
         void scaleLine(float scaleFactor);
         // Scale line based on anchor point (ax,ay)
         void scaleLine(float scaleFactor, short ax, short ay);
+
+        //bool intersect(short x, short y);
+        bool intersect(Line line);
 
     private:
         Point P1;

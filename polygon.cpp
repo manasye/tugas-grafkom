@@ -17,7 +17,7 @@
 void floodFill(DrawSurface &fb, short x, short y,
                uint32_t targetColor, uint32_t replacementColor)
 {
-    printf("Processing...\n");
+
     // Initialize queue
     typedef std::pair<short, short> pairedShort;
     std::list<std::pair<short, short>> toBeColored;
@@ -188,12 +188,56 @@ void Polygon::scale(float scaleFactor)
     this->scaleAtAnchor(scaleFactor, xc, yc);
 }
 
-bool Polygon::contains(short x, short y) {
-
+Point Polygon::leftmostPoint() {
+    Point leftmost = listOfPoint[0];
+    for (int i = 1; i < this->numOfPoint; i++) {
+        if (leftmost.x > listOfPoint[i].x) {
+            leftmost = listOfPoint[i];
+        }
+    }
+    return leftmost;
 }
 
+bool Polygon::contains(short x, short y) {
+    Point temp;
+    temp.x = x;
+    temp.y = y;
+    return this->contains(temp);
+}
+
+/* Using the virtual ray algorithm
+   Idea : Create a line from any point outside the polygon and the point in question.
+          Count the number of intersection with the polygon's sides.
+          If it's odd, the point is inside the polygon.
+*/
 bool Polygon::contains(Point p) {
-    return this->contains(p.x, p.y);
+    Point startPoint = this->leftmostPoint();
+    startPoint.x -= 5;
+    startPoint.y = p.y;
+
+    Line vRay (startPoint, p);
+    Line *tempLine;
+    int intersectCount = 0;
+
+    for (int i = 0; i < numOfPoint - 1; i++)
+    {
+        tempLine = new Line(this->listOfPoint[i], this->listOfPoint[i + 1], this->listOfColor[i]);
+        if (tempLine->intersect(vRay)) {
+            intersectCount++;
+        }
+        delete tempLine;
+    }
+    tempLine = new Line(this->listOfPoint[this->numOfPoint - 1], this->listOfPoint[0], this->listOfColor[numOfPoint - 1]);
+    if (tempLine->intersect(vRay)) {
+        intersectCount++;
+    }
+    delete tempLine;
+    
+    if ((intersectCount % 2) == 0) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 Circle::Circle(short xc, short yc, short radius, uint32_t rgb)

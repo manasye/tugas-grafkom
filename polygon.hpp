@@ -31,6 +31,8 @@ class Polygon
     Point *listOfPoint;
     uint32_t *listOfColor;
     int numOfPoint;
+    
+    Point leftmostPoint();
 };
 
 class Circle
