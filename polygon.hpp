@@ -9,6 +9,8 @@ class Polygon
   public:
     Polygon();
     void addPoint(short x, short y, uint32_t rgb);
+
+    uint32_t getFirstColor();
     // Draw this polygon to framebuffer
     void draw(DrawSurface &fb);
     // Move the polygon
@@ -21,6 +23,9 @@ class Polygon
     void scaleAtAnchor(float scaleFactor, short ax, short ay);
     // Rotate the polygon based on an anchor point (ax, ay)
     void rotateAtAnchor(float degree, short ax, short ay);
+    // Checks if point (x,y) in this Polygon
+    bool contains(short x, short y);
+    bool contains(Point p);
 
   private:
     Point *listOfPoint;

@@ -361,7 +361,6 @@ void draw(DrawSurface &fb, Line *listOfLine, Circle *listOfCircle, Polygon *list
     {
         listOfLine[i].draw(fb);
     }
-    fb.updateScreen();
 }
 
 int main()
@@ -446,10 +445,11 @@ int main()
     fclose(inputFile);
 
     // Draw all Polygon, Circle, and Line
-    draw(vp, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
+    draw(fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
-    // Try to draw turret barel tank1
-    // floodFill(fb, 300, 410, BLACK, 0xffff00);
+    // Try to draw turret barrel tank1
+    floodFill(fb, 300, 410, BLACK, 0xffff00);
+    fb.updateScreen();
 
     // Pause
     scanf("%c", &temp);

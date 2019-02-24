@@ -1,13 +1,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <queue>
+#include <list>
 #include <iostream>
 #include "line.hpp"
 #include "DrawSurface.hpp"
 #include "polygon.hpp"
-
-using namespace std;
 
 /*                
     Helper function  
@@ -16,43 +14,50 @@ using namespace std;
 // Pseudocode taken from https://graphics.fandom.com/wiki/Flood_fill
 // Target color is the initial color (in our case is BLACK)
 // Replacement color is the new color
-void floodFill(DrawSurface &fb, double x, double y,
+void floodFill(DrawSurface &fb, short x, short y,
                uint32_t targetColor, uint32_t replacementColor)
 {
+    printf("Processing...\n");
     // Initialize queue
-    typedef pair<double, double> pairedDouble;
-    queue<pair<double, double>> toBeColored;
+    typedef std::pair<short, short> pairedShort;
+    std::list<std::pair<short, short>> toBeColored;
 
     // Not equal to target color
     if (fb.getPixel(x, y) != targetColor)
         return;
 
     // Push if it is to be colored
-    toBeColored.push(pairedDouble(x, y));
+    toBeColored.push_back(pairedShort(x, y));
 
     // Loop until all to be colored empty
     while (!toBeColored.empty())
     {
         // Get current element
-        pairedDouble currCoor = toBeColored.front();
-        toBeColored.pop();
+        pairedShort currCoor = toBeColored.front();
+        toBeColored.pop_front();
         // Get current coordinate
-        double x = currCoor.first;
-        double y = currCoor.second;
+        short x = currCoor.first;
+        short y = currCoor.second;
         // Set the color
         fb.setPixel(x, y, replacementColor);
         // West area
-        if (fb.getPixel(x - 1, y) == targetColor)
-            toBeColored.push(pairedDouble(x - 1, y));
+        if (fb.getPixel(x - 1, y) == targetColor) {
+            toBeColored.push_back(pairedShort(x - 1, y));
+        }
         // East area
-        if (fb.getPixel(x + 1, y) == targetColor)
-            toBeColored.push(pairedDouble(x + 1, y));
+        if (fb.getPixel(x + 1, y) == targetColor) {
+            toBeColored.push_back(pairedShort(x + 1, y));
+        }
         // North area
-        if (fb.getPixel(x, y - 1) == targetColor)
-            toBeColored.push(pairedDouble(x, y - 1));
+        if (fb.getPixel(x, y - 1) == targetColor) {
+            toBeColored.push_back(pairedShort(x, y - 1));
+        }
         // South area
-        if (fb.getPixel(x, y + 1) == targetColor)
-            toBeColored.push(pairedDouble(x, y + 1));
+        if (fb.getPixel(x, y + 1) == targetColor) {
+            toBeColored.push_back(pairedShort(x, y + 1));
+        }
+        toBeColored.unique();
+        //printf("%d\n",toBeColored.size());
     }
 }
 
@@ -61,6 +66,10 @@ Polygon::Polygon()
     this->listOfPoint = (Point *)malloc(sizeof(Point));
     this->listOfColor = (uint32_t *)malloc(sizeof(uint32_t));
     this->numOfPoint = 0;
+}
+
+uin32_t Polygon::getFirstColor() {
+    return this->listOfColor[0];
 }
 
 void Polygon::addPoint(short x, short y, uint32_t rgb)
@@ -177,6 +186,14 @@ void Polygon::scale(float scaleFactor)
 
     // Scale based on centroid
     this->scaleAtAnchor(scaleFactor, xc, yc);
+}
+
+bool Polygon::contains(short x, short y) {
+
+}
+
+bool Polygon::contains(Point p) {
+    return this->contains(p.x, p.y);
 }
 
 Circle::Circle(short xc, short yc, short radius, uint32_t rgb)
