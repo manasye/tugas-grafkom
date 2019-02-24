@@ -71,6 +71,15 @@ Framebuffer::~Framebuffer()
     free(this->backBuffer2);
 }
 
+uint32_t Framebuffer::getPixel(short x, short y)
+{
+    if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres))
+    {
+        return this->currentBuffer[y * this->xres + x];
+    }
+    return BLACK;
+}
+
 void Framebuffer::setPixel(short x, short y, uint32_t rgb)
 {
     if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres))

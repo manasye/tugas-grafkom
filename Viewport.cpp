@@ -70,6 +70,15 @@ void Viewport::clear()
     }
 }
 
+uint32_t Viewport::getPixel(short x, short y)
+{
+    if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres))
+    {
+        return this->buffer[y * this->xres + x];
+    }
+    return BLACK;
+}
+
 void Viewport::setPixel(short x, short y, uint32_t rgb)
 {
     if ((x >= 0) && (x < this->xres) && (y >= 0) && (y < this->yres))
@@ -83,23 +92,23 @@ void Viewport::flushToFramebuffer()
     // Also draws a white border to signify the viewport
     for (int i = -1; i <= this->xres; i++)
     {
-        this->fb->setPixel(this->xloc + i, this->yloc - 1, 0xFFFFFF);
+        this->fb->setPixel(this->xloc + i, this->yloc - 1, WHITE);
     }
 
     int j;
     for (j = 0; j < this->yres; j++)
     {
-        this->fb->setPixel(this->xloc - 1, this->yloc + j, 0xFFFFFF);
+        this->fb->setPixel(this->xloc - 1, this->yloc + j, WHITE);
         for (int i = 0; i < this->xres; i++)
         {
             this->fb->setPixel(this->xloc + i, this->yloc + j, this->buffer[j * this->xres + i]);
         }
-        this->fb->setPixel(this->xloc + this->xres, this->yloc + j, 0xFFFFFF);
+        this->fb->setPixel(this->xloc + this->xres, this->yloc + j, WHITE);
     }
 
     for (int i = -1; i <= this->xres; i++)
     {
-        this->fb->setPixel(this->xloc + i, this->yloc + j, 0xFFFFFF);
+        this->fb->setPixel(this->xloc + i, this->yloc + j, WHITE);
     }
 
     this->clear();

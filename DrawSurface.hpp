@@ -5,23 +5,24 @@
 
 class DrawSurface
 {
-  public:
-    short getXRes()
-    {
-        return xres;
-    }
+public:
+  short getXRes()
+  {
+    return xres;
+  }
 
-    short getYRes()
-    {
-        return yres;
-    }
+  short getYRes()
+  {
+    return yres;
+  }
 
-    void virtual setPixel(short x, short y, uint32_t rgb) = 0;
-    void virtual updateScreen() = 0;
+  uint32_t virtual getPixel(short x, short y) = 0;
+  void virtual setPixel(short x, short y, uint32_t rgb) = 0;
+  void virtual updateScreen() = 0;
 
-  protected:
-    short yres;
-    short xres;
+protected:
+  short yres;
+  short xres;
 };
 
 #endif

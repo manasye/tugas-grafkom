@@ -13,9 +13,9 @@ const short RIGHT = 2;  // 0010
 const short BOTTOM = 4; // 0100
 const short TOP = 8;    // 1000
 
-//
-// Helper function
-//
+/*
+   Helper function
+*/
 
 // Sign for draw line
 short sign(short x)
@@ -82,7 +82,7 @@ Line clipCohenSutherland(DrawSurface &fb, Line &line)
             accept = true;
             break;
         }
-        else if (code1 & code2) 
+        else if (code1 & code2)
         {
             break;
         }
@@ -106,11 +106,11 @@ Line clipCohenSutherland(DrawSurface &fb, Line &line)
             if (codeOut & TOP)
             {
                 short ydiff = y2 - y1;
-                if (ydiff == 0) 
+                if (ydiff == 0)
                 {
                     x = x1;
-                } 
-                else 
+                }
+                else
                 {
                     x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
                 }
@@ -120,11 +120,11 @@ Line clipCohenSutherland(DrawSurface &fb, Line &line)
             else if (codeOut & BOTTOM)
             {
                 short ydiff = y2 - y1;
-                if (ydiff == 0) 
+                if (ydiff == 0)
                 {
                     x = x1;
-                } 
-                else 
+                }
+                else
                 {
                     x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
                 }
@@ -134,11 +134,11 @@ Line clipCohenSutherland(DrawSurface &fb, Line &line)
             else if (codeOut & RIGHT)
             {
                 short xdiff = x2 - x1;
-                if (xdiff == 0) 
+                if (xdiff == 0)
                 {
                     y = y1;
-                } 
-                else 
+                }
+                else
                 {
                     y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
                 }
@@ -148,10 +148,11 @@ Line clipCohenSutherland(DrawSurface &fb, Line &line)
             else if (codeOut & LEFT)
             {
                 short xdiff = x2 - x1;
-                if (xdiff == 0) {
+                if (xdiff == 0)
+                {
                     y = y1;
-                } 
-                else 
+                }
+                else
                 {
                     y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
                 }
@@ -174,11 +175,11 @@ Line clipCohenSutherland(DrawSurface &fb, Line &line)
         }
     }
 
-    if (accept) 
+    if (accept)
     {
         return Line(x1, y1, x2, y2, line.getColor());
-    } 
-    else 
+    }
+    else
     {
         return Line(0, 0, 0, 0, line.getColor());
     }
@@ -218,7 +219,7 @@ uint32_t Line::getColor()
 
 void Line::draw(DrawSurface &fb)
 {
-    Line toDraw = clipCohenSutherland(fb,*this);
+    Line toDraw = clipCohenSutherland(fb, *this);
 
     // Check delta of x and y
     short dx = (toDraw.getP2().x - toDraw.getP1().x);

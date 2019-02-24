@@ -368,7 +368,7 @@ int main()
 {
     char temp;
     Framebuffer fb;
-    Viewport vp(&fb, 1000, 500, 100, 100);
+    Viewport vp(&fb, 1200, 600, 50, 50);
 
     Polygon *listOfPolygon;
     Circle *listOfCircle;
@@ -384,12 +384,6 @@ int main()
 
     listOfLine = (Line *)malloc(sizeof(Line));
     numOfLine = 0;
-
-    // Line tempLine = clipCohenSutherland(fb, 0, 70, 0, 70, 10, 50, 10, 50, YELLOW);
-    // printf("X0: %d\n", tempLine.getP1().x);
-    // printf("Y0: %d\n", tempLine.getP1().y);
-    // printf("X1: %d\n", tempLine.getP2().x);
-    // printf("Y1: %d\n", tempLine.getP2().y);
 
     printf("Width : %d\nHeight : %d\n", fb.getXRes(), fb.getYRes());
     scanf("%c", &temp);
@@ -454,10 +448,13 @@ int main()
     // Draw all Polygon, Circle, and Line
     draw(vp, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
+    // Try to draw turret barel tank1
+    // floodFill(fb, 300, 410, BLACK, 0xffff00);
+
     // Pause
     scanf("%c", &temp);
 
-    animateAllObject(vp, listOfLine, listOfCircle, listOfPolygon);
+    // animateAllObject(vp, listOfLine, listOfCircle, listOfPolygon);
 
     // Turn the cursor back on
     system("setterm -cursor on");

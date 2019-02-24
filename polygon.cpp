@@ -1,9 +1,60 @@
-#include "line.hpp"
-#include "DrawSurface.hpp"
-#include "polygon.hpp"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <queue>
+#include <iostream>
+#include "line.hpp"
+#include "DrawSurface.hpp"
+#include "polygon.hpp"
+
+using namespace std;
+
+/*                
+    Helper function  
+*/
+
+// Pseudocode taken from https://graphics.fandom.com/wiki/Flood_fill
+// Target color is the initial color (in our case is BLACK)
+// Replacement color is the new color
+void floodFill(DrawSurface &fb, double x, double y,
+               uint32_t targetColor, uint32_t replacementColor)
+{
+    // Initialize queue
+    typedef pair<double, double> pairedDouble;
+    queue<pair<double, double>> toBeColored;
+
+    // Not equal to target color
+    if (fb.getPixel(x, y) != targetColor)
+        return;
+
+    // Push if it is to be colored
+    toBeColored.push(pairedDouble(x, y));
+
+    // Loop until all to be colored empty
+    while (!toBeColored.empty())
+    {
+        // Get current element
+        pairedDouble currCoor = toBeColored.front();
+        toBeColored.pop();
+        // Get current coordinate
+        double x = currCoor.first;
+        double y = currCoor.second;
+        // Set the color
+        fb.setPixel(x, y, replacementColor);
+        // West area
+        if (fb.getPixel(x - 1, y) == targetColor)
+            toBeColored.push(pairedDouble(x - 1, y));
+        // East area
+        if (fb.getPixel(x + 1, y) == targetColor)
+            toBeColored.push(pairedDouble(x + 1, y));
+        // North area
+        if (fb.getPixel(x, y - 1) == targetColor)
+            toBeColored.push(pairedDouble(x, y - 1));
+        // South area
+        if (fb.getPixel(x, y + 1) == targetColor)
+            toBeColored.push(pairedDouble(x, y + 1));
+    }
+}
 
 Polygon::Polygon()
 {
