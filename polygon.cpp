@@ -6,9 +6,11 @@
 #include "line.hpp"
 #include "DrawSurface.hpp"
 #include "polygon.hpp"
+#include "edge.hpp"
+#include "edgebucket.hpp"
 
-/*                
-    Helper function  
+/*
+    Helper function
 */
 
 // Pseudocode taken from https://graphics.fandom.com/wiki/Flood_fill
@@ -115,27 +117,88 @@ bool isCorner(DrawSurface &fb, short x, short y, uint32_t color)
 
 void scanLine(DrawSurface &fb, uint32_t targetColor)
 {
+    EdgeBucket bucket;
     for (short i = 0; i < fb.getYRes(); i++)
     {
-        short j = 0;
+        Edge edge;
+        bool flag = false;
+
+        short j = 1;
         while (j < fb.getXRes())
         {
-            if ((fb.getPixel(j, i) != targetColor))
+            if (fb.getPixel(j, i) != targetColor)
             {
-                if (!isCorner(fb, j, i, fb.getPixel(j, i)))
-                {
-                    uint32_t temp = fb.getPixel(j, i);
-                    int count = 0;
-                    while ((fb.getPixel(j + 1, i) != temp) && (j < fb.getXRes()))
-                    {
-                        count++;
-                        fb.setPixel(j + 1, i, temp);
-                        j++;
-                    }
+                switch (edge.counter) {
+                    case 0:
+                        edge.P1 = Point{j,i};
+                        edge.counter++;
+                        edge.color = fb.getPixel(j,i);
+                        break;
+                    case 1:
+                        Point P2{j,i};
+
+                        if (fb.getPixel(j,i) == fb.getPixel(j-1,i) && P2.x-1 == edge.P1.x)
+                        {
+                            if (!flag)
+                            {
+                                flag = true;
+                                edge.P1 = P2;
+                            } else {
+                                edge.counter = 0;
+                            }
+                        } else if (fb.getPixel(j,i) == edge.color){
+                            edge.P2 = P2;
+                            edge.counter++;
+
+                            bucket.addEdge(edge);
+
+                            flag = false;
+                            edge.counter = 0;
+                        }
+                        break;
                 }
             }
+            //
+            // if (fb.getPixel(j, i) != targetColor)
+            // {
+            //     if (!isCorner(fb, j, i, fb.getPixel(j, i)))
+            //     {
+            //         uint32_t temp = fb.getPixel(j, i);
+            //         int count = 0;
+            //         while ((fb.getPixel(j + 1, i) != temp) && (j < fb.getXRes()))
+            //         {
+            //             count++;
+            //             fb.setPixel(j + 1, i, temp);
+            //             j++;
+            //         }
+            //     }
+            // }
             j++;
         }
+
+        if (edge.counter == 1 && bucket.size() > 0)
+        {
+            Edge edge1 = bucket.getEdge(bucket.size());
+            if (edge.color == edge1.color){
+                edge.P2 = edge.P1;
+                edge.P1 = edge1.P2;
+                bucket.addEdge(edge);
+            }
+        }
+
+        for (int k = 0; k < bucket.size(); k++)
+        {
+            Edge edge1 = bucket.getEdge(k);
+            int xmin = edge1.P1.x;
+            int xmax = edge1.P2.x;
+
+            for (int l = xmin; l <= xmax; l++)
+            {
+                fb.setPixel(l, i, edge1.color);
+            }
+        }
+
+        bucket.clear();
     }
 }
 
@@ -197,8 +260,8 @@ void Polygon::draw(DrawSurface &fb)
         }
 
         // printf("Coloring polygon at (%d,%d)\n", center.x, center.y);
-        floodFillRecursive(fb, center.x, center.y, BLACK, listOfColor[0]);
-        // scanLine(fb, BLACK);
+        // floodFillRecursive(fb, center.x, center.y, BLACK, listOfColor[0]);
+        scanLine(fb, BLACK);
     }
 }
 
