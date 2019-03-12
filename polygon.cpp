@@ -43,29 +43,32 @@ void floodFill(DrawSurface &fb, short x, short y,
         fb.setPixel(x, y, replacementColor);
 
         // West area
-        if (fb.getPixel(x - 1, y) == targetColor) {
+        if (fb.getPixel(x - 1, y) == targetColor)
+        {
             toBeColored.push_back(pairedShort(x - 1, y));
         }
         // East area
-        if (fb.getPixel(x + 1, y) == targetColor) {
+        if (fb.getPixel(x + 1, y) == targetColor)
+        {
             toBeColored.push_back(pairedShort(x + 1, y));
         }
         // North area
-        if (fb.getPixel(x, y - 1) == targetColor) {
+        if (fb.getPixel(x, y - 1) == targetColor)
+        {
             toBeColored.push_back(pairedShort(x, y - 1));
         }
         // South area
-        if (fb.getPixel(x, y + 1) == targetColor) {
+        if (fb.getPixel(x, y + 1) == targetColor)
+        {
             toBeColored.push_back(pairedShort(x, y + 1));
         }
         toBeColored.unique();
         //printf("%d\n",toBeColored.size());
     }
-
 }
 
 void floodFillRecursive(DrawSurface &fb, short x, short y,
-               uint32_t targetColor, uint32_t replacementColor)
+                        uint32_t targetColor, uint32_t replacementColor)
 {
     // Not equal to target color
     if (fb.getPixel(x, y) != targetColor)
@@ -75,22 +78,65 @@ void floodFillRecursive(DrawSurface &fb, short x, short y,
     fb.setPixel(x, y, replacementColor);
 
     // West area
-    if (fb.getPixel(x - 1, y) == targetColor) {
+    if (fb.getPixel(x - 1, y) == targetColor)
+    {
         floodFillRecursive(fb, x - 1, y, targetColor, replacementColor);
     }
     // East area
-    if (fb.getPixel(x + 1, y) == targetColor) {
+    if (fb.getPixel(x + 1, y) == targetColor)
+    {
         floodFillRecursive(fb, x + 1, y, targetColor, replacementColor);
     }
     // North area
-    if (fb.getPixel(x, y - 1) == targetColor) {
+    if (fb.getPixel(x, y - 1) == targetColor)
+    {
         floodFillRecursive(fb, x, y - 1, targetColor, replacementColor);
     }
     // South area
-    if (fb.getPixel(x, y + 1) == targetColor) {
+    if (fb.getPixel(x, y + 1) == targetColor)
+    {
         floodFillRecursive(fb, x, y + 1, targetColor, replacementColor);
     }
+}
 
+bool isCorner(DrawSurface &fb, short x, short y, uint32_t color)
+{
+    short i = x;
+    while (i < fb.getXRes())
+    {
+        if (fb.getPixel(i + 1, y) == color)
+        {
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+void scanLine(DrawSurface &fb, uint32_t targetColor)
+{
+    for (short i = 0; i < fb.getYRes(); i++)
+    {
+        short j = 0;
+        while (j < fb.getXRes())
+        {
+            if ((fb.getPixel(j, i) != targetColor))
+            {
+                if (!isCorner(fb, j, i, fb.getPixel(j, i)))
+                {
+                    uint32_t temp = fb.getPixel(j, i);
+                    int count = 0;
+                    while ((fb.getPixel(j + 1, i) != temp) && (j < fb.getXRes()))
+                    {
+                        count++;
+                        fb.setPixel(j + 1, i, temp);
+                        j++;
+                    }
+                }
+            }
+            j++;
+        }
+    }
 }
 
 Polygon::Polygon()
@@ -100,7 +146,8 @@ Polygon::Polygon()
     this->numOfPoint = 0;
 }
 
-uint32_t Polygon::getFirstColor() {
+uint32_t Polygon::getFirstColor()
+{
     return this->listOfColor[0];
 }
 
@@ -133,10 +180,11 @@ void Polygon::draw(DrawSurface &fb)
         tempLine = new Line(this->listOfPoint[this->numOfPoint - 1].x, this->listOfPoint[numOfPoint - 1].y, this->listOfPoint[0].x, this->listOfPoint[0].y, this->listOfColor[numOfPoint - 1]);
         tempLine->draw(fb);
         delete tempLine;
-        
+
         Point center = this->calculateCentroid();
 
-        if (!this->contains(center)) {
+        if (!this->contains(center))
+        {
             Point left = this->leftmostPoint();
             left.y = center.y;
             left.x += 2;
@@ -148,9 +196,9 @@ void Polygon::draw(DrawSurface &fb)
             center = left;
         }
 
-        printf("Coloring polygon at (%d,%d)\n",center.x, center.y);
-        floodFillRecursive(fb,center.x,center.y,BLACK,listOfColor[0]);
-    
+        // printf("Coloring polygon at (%d,%d)\n", center.x, center.y);
+        floodFillRecursive(fb, center.x, center.y, BLACK, listOfColor[0]);
+        // scanLine(fb, BLACK);
     }
 }
 
@@ -219,17 +267,21 @@ void Polygon::scale(float scaleFactor)
     this->scaleAtAnchor(scaleFactor, centroid.x, centroid.y);
 }
 
-Point Polygon::leftmostPoint() {
+Point Polygon::leftmostPoint()
+{
     Point leftmost = listOfPoint[0];
-    for (int i = 1; i < this->numOfPoint; i++) {
-        if (leftmost.x > listOfPoint[i].x) {
+    for (int i = 1; i < this->numOfPoint; i++)
+    {
+        if (leftmost.x > listOfPoint[i].x)
+        {
             leftmost = listOfPoint[i];
         }
     }
     return leftmost;
 }
 
-Point Polygon::calculateCentroid() {
+Point Polygon::calculateCentroid()
+{
     Point center;
     center.x = 0;
     center.y = 0;
@@ -245,7 +297,8 @@ Point Polygon::calculateCentroid() {
     return center;
 }
 
-bool Polygon::contains(short x, short y) {
+bool Polygon::contains(short x, short y)
+{
     Point temp;
     temp.x = x;
     temp.y = y;
@@ -257,32 +310,38 @@ bool Polygon::contains(short x, short y) {
           Count the number of intersection with the polygon's sides.
           If it's odd, the point is inside the polygon.
 */
-bool Polygon::contains(Point p) {
+bool Polygon::contains(Point p)
+{
     Point startPoint = this->leftmostPoint();
     startPoint.x -= 5;
     startPoint.y = p.y;
 
-    Line vRay (startPoint, p);
+    Line vRay(startPoint, p);
     Line *tempLine;
     int intersectCount = 0;
 
     for (int i = 0; i < numOfPoint - 1; i++)
     {
         tempLine = new Line(this->listOfPoint[i], this->listOfPoint[i + 1], this->listOfColor[i]);
-        if (tempLine->intersect(vRay)) {
+        if (tempLine->intersect(vRay))
+        {
             intersectCount++;
         }
         delete tempLine;
     }
     tempLine = new Line(this->listOfPoint[this->numOfPoint - 1], this->listOfPoint[0], this->listOfColor[numOfPoint - 1]);
-    if (tempLine->intersect(vRay)) {
+    if (tempLine->intersect(vRay))
+    {
         intersectCount++;
     }
     delete tempLine;
-    
-    if ((intersectCount % 2) == 0) {
+
+    if ((intersectCount % 2) == 0)
+    {
         return false;
-    } else {
+    }
+    else
+    {
         return true;
     }
 }

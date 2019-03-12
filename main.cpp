@@ -446,17 +446,17 @@ int main()
     fclose(inputFile);
 
     // Draw all Polygon, Circle, and Line
-    printf("Processing...");
+    // printf("Processing...");
     draw(fb, listOfLine, listOfCircle, listOfPolygon, numOfLine, numOfCircle, numOfPolygon);
 
     // Try to draw turret barrel tank1
     // Point tempCenter = listOfPolygon[1].calculateCentroid();
     // floodFill(fb, tempCenter.x, tempCenter.y, BLACK, listOfPolygon[1].getFirstColor());
     fb.updateScreen();
-    
+
     //printf("(%d,%d)",center.x,center.y);
     //std::cout << listOfPolygon[numOfPolygon - 1].contains(center) << std::endl;
-    
+
     // Pause
     scanf("%c", &temp);
 
